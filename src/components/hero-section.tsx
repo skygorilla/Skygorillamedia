@@ -14,77 +14,50 @@ export default function HeroSection() {
     const root = document.documentElement;
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
     
-    const lerpFactor = 0.18;
-    let targetT = 0;
-    let currentT = 0;
+    let ticking = false;
     let stuck = false;
 
-    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-    const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const heroRect = hero.getBoundingClientRect();
+          const navH = nav.offsetHeight;
+          
+          const shouldBeStuck = heroRect.bottom <= navH + headerH;
 
-    function computeAndApplyState() {
-      const navH = nav!.offsetHeight;
-      const heroRect = hero!.getBoundingClientRect();
+          if (shouldBeStuck) {
+            if (!stuck) {
+              nav.classList.add('morph');
+              stuck = true;
+            }
+          } else {
+            if (stuck) {
+              nav.classList.remove('morph');
+              stuck = false;
+            }
+          }
+          
+          // Always calculate morph progress
+          const distToTouch = headerH - (heroRect.bottom - navH);
+          const targetT = Math.max(0, Math.min(1, distToTouch / navH));
+          nav.style.setProperty('--morphT', targetT.toFixed(4));
 
-      // Condition to check if the nav bar should be stuck
-      const shouldBeStuck = heroRect.bottom <= navH + headerH;
-      
-      if (shouldBeStuck) {
-        if (!stuck) {
-          nav.classList.add('morph');
-          stuck = true;
-        }
-        targetT = 1;
-      } else {
-        if (stuck) {
-          nav.classList.remove('morph');
-          stuck = false;
-        }
-        // Calculate morph progress when not stuck
-        const distToTouch = headerH - (heroRect.bottom - navH);
-        targetT = clamp01(distToTouch / navH);
-      }
-    }
-    
-    let ticking = false;
-    function onScrollOrResize() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        computeAndApplyState();
-        ticking = false;
-      });
-    }
+          ticking = false;
+        });
 
-    function animate() {
-      const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (isReduced) {
-        setMorphT(targetT);
-        requestAnimationFrame(animate);
-        return;
+        ticking = true;
       }
-      
-      const delta = targetT - currentT;
-      if (Math.abs(delta) > 0.001) {
-          currentT += delta * lerpFactor;
-          setMorphT(currentT);
-      } else if (currentT !== targetT) {
-          currentT = targetT;
-          setMorphT(currentT);
-      }
-      requestAnimationFrame(animate);
-    }
-    
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize);
-    
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
     // Initial call
-    onScrollOrResize();
-    animate();
+    onScroll();
 
     return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
     };
   }, []);
 
