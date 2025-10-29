@@ -14,6 +14,7 @@ export default function HeroSection() {
 
     if (!nav || !hero || !header) return;
     
+    // Hysteresis gap so tiny scroll jitters don't toggle the state.
     const HYSTERESIS = 8; // px
 
     let triggerY = 0;
@@ -21,11 +22,11 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
-      // getBoundingClientRect is more reliable in React than offsetTop
+      // getBoundingClientRect is more reliable for positions relative to the viewport.
       const heroRect = hero.getBoundingClientRect();
-      // Add the current scroll position to get the absolute top of the hero
-      const heroTop = heroRect.top + window.scrollY;
-      return heroTop + hero.offsetHeight - nav.offsetHeight - header.offsetHeight;
+      // We add window.scrollY to get the absolute position on the page.
+      const heroBottom = heroRect.bottom + window.scrollY;
+      return heroBottom - nav.offsetHeight - header.offsetHeight;
     }
 
     function recalc() {
@@ -40,7 +41,7 @@ export default function HeroSection() {
       if (!isMorphed && y >= triggerY) {
         nav.classList.add('morph');
         isMorphed = true;
-      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
+      } else if (isMorphed && y < triggerY - HYSTERESIS) {
         nav.classList.remove('morph');
         isMorphed = false;
       }
@@ -56,8 +57,7 @@ export default function HeroSection() {
       }
     }
     
-    // Using 'load' event on window is not reliable in Next.js
-    // We can run recalc once after mount and then on resize.
+    // Initial calculation and setup
     recalc();
 
     window.addEventListener('scroll', onScroll, { passive: true });
