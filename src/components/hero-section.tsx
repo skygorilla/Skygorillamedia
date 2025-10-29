@@ -34,12 +34,13 @@ export default function HeroSection() {
     
     function applyStickiness() {
         const heroRect = hero!.getBoundingClientRect();
-        const shouldStick = heroRect.bottom <= headerH;
+        const navH = nav!.offsetHeight;
+        const shouldStick = heroRect.bottom <= (headerH + navH);
   
         if (!stuck && shouldStick) {
           nav!.classList.add('morph');
           stuck = true;
-        } else if (stuck && heroRect.bottom > headerH + hysteresis) {
+        } else if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
           nav!.classList.remove('morph');
           stuck = false;
         }
