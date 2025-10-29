@@ -48,7 +48,7 @@ export default function HeroSection() {
     }
 
     function animate() {
-      currentT.current += (targetT.current - currentT.current) * 0.15;
+      currentT.current += (targetT.current - currentT.current) * 0.08;
       setMorphT(currentT.current);
       animationFrameId = requestAnimationFrame(animate);
     }
