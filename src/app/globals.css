@@ -100,12 +100,11 @@
 
 @layer components {
   .go-nav {
-    --morphT: 0;
-    border-top-left-radius:  calc((1 - var(--morphT)) * var(--rMax));
-    border-top-right-radius: calc((1 - var(--morphT)) * var(--rMax));
-    border-bottom-left-radius: calc(var(--morphT) * var(--rMax));
-    border-bottom-right-radius: calc(var(--morphT) * var(--rMax));
-    transition: box-shadow .45s, width .3s, border-top-left-radius .3s, border-top-right-radius .3s, border-bottom-left-radius .3s, border-bottom-right-radius .3s;
+    border-top-left-radius: var(--rMax);
+    border-top-right-radius: var(--rMax);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transition: all .45s;
   }
 
   .go-nav.morph {

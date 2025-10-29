@@ -7,8 +7,6 @@ export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const [stuck, setStuck] = useState(false);
-  const currentT = useRef(0);
-  const targetT = useRef(0);
   
   useEffect(() => {
     const nav = navRef.current;
@@ -16,60 +14,28 @@ export default function HeroSection() {
     const root = document.documentElement;
     if (!nav || !hero) return;
 
-    let animationFrameId: number;
-
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
     const hysteresis = 6;
-    const morphRange = 220;
-
-    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-    const setMorphT = (t: number) => {
-      if (nav) {
-        nav.style.setProperty('--morphT', t.toFixed(4));
-      }
-    };
-
-    function measure() {
-      const heroRect = hero!.getBoundingClientRect();
-      const threshold = headerH + nav!.offsetHeight;
-      const dist = threshold - heroRect.bottom;
-      targetT.current = clamp01(dist / morphRange);
-    }
-    
-    function applyStickiness() {
-      const heroRect = hero!.getBoundingClientRect();
-      if (!stuck && heroRect.bottom <= (headerH + nav!.offsetHeight)) {
-        setStuck(true);
-        currentT.current = 1;
-        setMorphT(currentT.current);
-      } else if (stuck && heroRect.bottom > (headerH + nav!.offsetHeight + hysteresis)) {
-        setStuck(false);
-      }
-    }
-
-    function animate() {
-      currentT.current += (targetT.current - currentT.current) * 0.08;
-      setMorphT(currentT.current);
-      animationFrameId = requestAnimationFrame(animate);
-    }
 
     function onScrollOrResize() {
-      measure();
-      applyStickiness();
+      const heroRect = hero!.getBoundingClientRect();
+      if (heroRect.bottom <= (headerH + nav!.offsetHeight)) {
+        setStuck(true);
+      } else if (heroRect.bottom > (headerH + nav!.offsetHeight + hysteresis)) {
+        setStuck(false);
+      }
     }
 
     window.addEventListener('scroll', onScrollOrResize, { passive: true });
     window.addEventListener('resize', onScrollOrResize);
     
     onScrollOrResize();
-    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
-      cancelAnimationFrame(animationFrameId);
     };
-  }, [stuck]);
+  }, []);
 
   return (
     <section
