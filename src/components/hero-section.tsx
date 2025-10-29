@@ -14,7 +14,6 @@ export default function HeroSection() {
     const root = document.documentElement;
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
     
-    const hysteresis = 6;
     const lerpFactor = 0.18;
     let targetT = 0;
     let currentT = 0;
@@ -23,27 +22,28 @@ export default function HeroSection() {
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
     const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
 
-    function computeTargetT() {
-      if (stuck) return 1;
-      const heroRect = hero!.getBoundingClientRect();
+    function computeAndApplyState() {
       const navH = nav!.offsetHeight;
-      const barTopY = heroRect.bottom - navH;
-      const distToTouch = headerH - barTopY;
-      return clamp01(distToTouch / navH);
-    }
-    
-    function applyStickiness() {
-        const heroRect = hero!.getBoundingClientRect();
-        const navH = nav!.offsetHeight;
-        const shouldStick = heroRect.bottom < (headerH + navH);
-  
-        if (!stuck && shouldStick) {
-          nav!.classList.add('morph');
+      const heroRect = hero!.getBoundingClientRect();
+
+      // Condition to check if the nav bar should be stuck
+      const shouldBeStuck = heroRect.bottom <= navH + headerH;
+      
+      if (shouldBeStuck) {
+        if (!stuck) {
+          nav.classList.add('morph');
           stuck = true;
-        } else if (stuck && heroRect.bottom >= (headerH + navH + hysteresis)) {
-          nav!.classList.remove('morph');
+        }
+        targetT = 1;
+      } else {
+        if (stuck) {
+          nav.classList.remove('morph');
           stuck = false;
         }
+        // Calculate morph progress when not stuck
+        const distToTouch = headerH - (heroRect.bottom - navH);
+        targetT = clamp01(distToTouch / navH);
+      }
     }
     
     let ticking = false;
@@ -51,8 +51,7 @@ export default function HeroSection() {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        targetT = computeTargetT();
-        applyStickiness();
+        computeAndApplyState();
         ticking = false;
       });
     }
@@ -78,15 +77,14 @@ export default function HeroSection() {
     
     window.addEventListener('scroll', onScrollOrResize, { passive: true });
     window.addEventListener('resize', onScrollOrResize);
-    window.addEventListener('load', onScrollOrResize);
     
+    // Initial call
     onScrollOrResize();
     animate();
 
     return () => {
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
-      window.removeEventListener('load', onScrollOrResize);
     };
   }, []);
 
