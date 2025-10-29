@@ -22,9 +22,9 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
-      // Get the top position of the hero section relative to the viewport
+      // getBoundingClientRect is more reliable in React than offsetTop
       const heroRect = hero.getBoundingClientRect();
-      // Add the current scroll position to get the absolute top
+      // Add the current scroll position to get the absolute top of the hero
       const heroTop = heroRect.top + window.scrollY;
       return heroTop + hero.offsetHeight - nav.offsetHeight - headerH;
     }
@@ -35,13 +35,13 @@ export default function HeroSection() {
     }
 
     function updateOnScroll() {
-      const y = window.pageYOffset || document.documentElement.scrollTop;
+      const y = window.scrollY || document.documentElement.scrollTop;
       
       // Enter morph when we pass trigger; exit only when we go above trigger - HYSTERESIS
       if (!isMorphed && y >= triggerY) {
         nav.classList.add('morph');
         isMorphed = true;
-      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
+      } else if (isMorphed && y < triggerY - HYSTERESIS) {
         nav.classList.remove('morph');
         isMorphed = false;
       }
@@ -56,12 +56,13 @@ export default function HeroSection() {
         ticking = true;
       }
     }
+    
+    // Using 'load' event on window is not reliable in Next.js
+    // We can run recalc once after mount and then on resize.
+    recalc();
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', recalc);
-
-    // Initial calculation
-    recalc();
 
     return () => {
       window.removeEventListener('scroll', onScroll);

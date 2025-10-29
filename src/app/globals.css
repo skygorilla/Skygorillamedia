@@ -17,7 +17,7 @@ html,body {
   --container-w:1200px;
   --bg:#2d2e34;
   --fg:#b9bcbd;
-  --accent:#c8091e;
+  --accent:#C8091E;
   --uvod:#0077ff;
   --pretplate:#00b894;
   --politika:#f39c12;
@@ -109,8 +109,6 @@ main{padding-top:var(--header-h)}
   position: fixed;
   top: var(--header-h);
   border-radius: 0 0 60px 60px;
-  z-index: 95;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
 }
 
 .spacer{height:1200px;background:#15161b}
