@@ -23,13 +23,13 @@ export default function Home() {
     const nav = navRef.current;
     const hero = heroRef.current;
     const header = headerRef.current;
-    const root = document.documentElement;
 
     if (!nav || !hero || !header) return;
     
+    const root = document.documentElement;
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
-    let hysteresis = 6;
-    let morphRange = 220;
+    const hysteresis = 6;
+    const morphRange = 220;
 
     let targetT = 0;
     let currentT = 0;
@@ -73,6 +73,7 @@ export default function Home() {
     
     window.addEventListener('scroll', onScrollOrResize, { passive: true });
     window.addEventListener('resize', onScrollOrResize);
+    window.addEventListener('load', onScrollOrResize);
     
     // Initial kick
     onScrollOrResize();
@@ -81,6 +82,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
+      window.removeEventListener('load', onScrollOrResize);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
