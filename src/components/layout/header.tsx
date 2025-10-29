@@ -78,31 +78,29 @@ export default function Home() {
 
   return (
     <>
-      <header id="topHeader" ref={headerRef}>
-        <nav aria-label="Glavna navigacija">
-          <ul className="menu">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  aria-current={item.active ? 'page' : undefined}
-                  className={item.active ? 'active' : ''}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <header className="network-header" id="topHeader" ref={headerRef}>
+        <div className="container">
+          <nav aria-label="Glavna navigacija">
+            <ul className="menu">
+              {navItems.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    aria-current={item.active ? 'page' : undefined}
+                    className={item.active ? 'active' : ''}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </header>
 
       <div className="hero" id="hero" ref={heroRef}>
         <div className="overlay"></div>
-        <nav className="red-nav" id="morphNav" ref={navRef}></nav>
-      </div>
-
-      <div className="content">
-        Scroll test sadržaj – pomakni stranicu dolje.
+        <nav className="go-nav" id="morphNav" ref={navRef}></nav>
       </div>
     </>
   );
