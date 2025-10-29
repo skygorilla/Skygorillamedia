@@ -16,14 +16,13 @@ export default function HeroSection() {
 
     const morphStartPadding = 0;
     const hysteresis = 6;
-    
     let stuck = false;
 
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
     const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
 
     function onScrollOrResize() {
-      if (!hero) return;
+      if (!hero || !nav) return;
 
       const heroRect = hero.getBoundingClientRect();
       const navH = nav.offsetHeight;
@@ -43,10 +42,10 @@ export default function HeroSection() {
         stuck = true;
       }
 
-      if (!stuck) {
-        setMorphT(targetT);
-      } else {
+      if (stuck) {
         setMorphT(1);
+      } else {
+        setMorphT(targetT);
       }
     }
     
