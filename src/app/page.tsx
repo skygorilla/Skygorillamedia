@@ -59,8 +59,10 @@ export default function Home() {
     }
 
     function animate() {
-      currentT += (targetT - currentT) * 0.15;
-      setMorphT(currentT);
+      if (!stuck) {
+        currentT += (targetT - currentT) * 0.15;
+        setMorphT(currentT);
+      }
       animationFrameRef.current = requestAnimationFrame(animate);
     }
 
