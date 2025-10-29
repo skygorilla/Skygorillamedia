@@ -9,11 +9,11 @@ export default function HeroSection() {
   useEffect(() => {
     const nav = navRef.current;
     const hero = heroRef.current;
-    const root = document.documentElement;
+    // We need a reference to the main header to get its height
+    const header = document.querySelector('.network-header') as HTMLElement;
 
-    if (!nav || !hero) return;
+    if (!nav || !hero || !header) return;
     
-    // Hysteresis gap so tiny scroll jitters don't toggle the state.
     const HYSTERESIS = 8; // px
 
     let triggerY = 0;
@@ -21,12 +21,11 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
-      const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
       // getBoundingClientRect is more reliable in React than offsetTop
       const heroRect = hero.getBoundingClientRect();
       // Add the current scroll position to get the absolute top of the hero
       const heroTop = heroRect.top + window.scrollY;
-      return heroTop + hero.offsetHeight - nav.offsetHeight - headerH;
+      return heroTop + hero.offsetHeight - nav.offsetHeight - header.offsetHeight;
     }
 
     function recalc() {
@@ -41,7 +40,7 @@ export default function HeroSection() {
       if (!isMorphed && y >= triggerY) {
         nav.classList.add('morph');
         isMorphed = true;
-      } else if (isMorphed && y < triggerY - HYSTERESIS) {
+      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
         nav.classList.remove('morph');
         isMorphed = false;
       }
@@ -64,9 +63,13 @@ export default function HeroSection() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', recalc);
 
+    // A small delay and re-calculation can help if initial render dimensions are off
+    const timeoutId = setTimeout(recalc, 100);
+
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', recalc);
+      clearTimeout(timeoutId);
     };
   }, []);
 
