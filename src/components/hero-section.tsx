@@ -34,8 +34,6 @@ export default function HeroSection() {
     
     function applyStickiness() {
         const heroRect = hero!.getBoundingClientRect();
-        // This is the key change: The condition should check when the *bottom* of the hero
-        // is at or above the header height.
         const shouldStick = heroRect.bottom <= headerH;
   
         if (!stuck && shouldStick) {
