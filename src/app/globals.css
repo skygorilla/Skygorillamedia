@@ -1,56 +1,441 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif; background: #000; color: #fff; }
 
-:root{
-  --header-h:40px;
-  --container-w:1200px;
-  --bg:#2d2e34;
-  --fg:#b9bcbd;
-  --accent:#c8091e;
-  --uvod:#0077ff;
-  --pretplate:#00b894;
-  --politika:#f39c12;
-  --kultura:#9b59b6;
-  --sport:#16a085;
-  --kontakt:#e67e22;
-  --background: 195 10% 6%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 351 92% 42%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent-color: 212 100% 50%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-  --radius: 0.5rem;
+/* Original Header Design */
+.network-header {
+    background: #2d2e34;
+    position: fixed; top: 0; left: 0; width: 100%; text-align: center; z-index: 100; height: 40px;
+}
+.network-header .container { max-width: 1200px; height: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 16px; }
+.menu { list-style: none; display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0; height: 100%; }
+.menu a {
+    display: flex; align-items: center; justify-content: center; color: #b9bcbd; font-size: 11px; font-weight: 700;
+    letter-spacing: .5px; text-decoration: none; text-transform: uppercase; text-shadow: 0 1px 1px rgba(0,0,0,.75);
+    transition: color .2s ease, background .2s ease; padding: 0 12px; height: 30px; margin: 5px 0; border-radius: 4px; background: #2d2e34;
+}
+.menu a.active { 
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 49%, transparent 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.2) 100%), #8b0000;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    color: #fff; height: 40px; margin: 0; border-radius: 0;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.7);
+}
+.menu li:nth-child(1) a:hover { background: #0077ff; color: #fff; }
+.menu li:nth-child(2) a:hover { background: #00b894; color: #fff; }
+.menu li:nth-child(3) a:hover { background: #f39c12; color: #fff; }
+.menu li:nth-child(5) a:hover { background: #9b59b6; color: #fff; }
+.menu li:nth-child(6) a:hover { background: #16a085; color: #fff; }
+.menu li:nth-child(7) a:hover { background: #e67e22; color: #fff; }
+
+header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background: #0057b8; z-index: 30; }
+
+.hero { position: relative; width: 100%; height: 758px; background: #000; overflow: hidden; }
+.curved-element { width: 100%; height: 400px; background: rgb(45, 46, 52); clip-path: ellipse(100% 50% at 50% 0%); }
+.slider { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease-in-out; }
+.slide.active { opacity: 1; }
+.overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)); z-index: 1; }
+
+.red-nav {
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: min(100%, 1024px); height: 80px; background: #8b0000;
+    border-radius: 60px 60px 0 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 20; transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex; align-items: center; justify-content: center;
+}
+.red-nav.morph {
+    position: fixed; top: 40px; border-radius: 0 0 60px 60px; z-index: 25;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow-x:hidden;background:#0b0c10;color:#fff;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif}
+/* Hero Content Styling */
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    max-width: 920px;
+    padding: 0 24px;
+}
 
-/* ====== Fixed Header (final design) ====== */
-.network-header{background:var(--bg);box-shadow:0 0 1px 1px rgba(0,0,0,.5),0 1px 5px 0 rgba(0,0,0,.35),inset 0 -1px 0 0 rgba(0,0,0,.15),inset 0 1px 0 0 hsla(0,0%,100%,.1);position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;text-align:center;z-index:100;height:var(--header-h)}
-.network-header .container{max-width:var(--container-w);height:100%;margin:0 auto;display:flex;align-items:center;justify-content:center;padding:0 16px}
-.menu{list-style:none;display:flex;justify-content:center;align-items:center;gap:10px;margin:0;height:100%;font-family:'Open Sans',sans-serif}
-.menu a{display:flex;align-items:center;justify-content:center;color:var(--fg);font-size:11px;font-weight:700;letter-spacing:.5px;text-decoration:none;text-transform:uppercase;text-shadow:0 1px 1px rgba(0,0,0,.75);transition:color .2s ease,background .2s ease,transform .2s ease;padding:0 12px;height:calc(var(--header-h) - 10px);line-height:calc(var(--header-h) - 10px);margin:5px 0;border-radius:4px;background:var(--bg)}
-.menu a.active{background-color:var(--accent);color:#fff;font-weight:700;height:var(--header-h);line-height:var(--header-h);margin:0;border-radius:0}
-.menu li:nth-child(1) a:hover{background:var(--uvod);color:#fff}
-.menu li:nth-child(2) a:hover{background:var(--pretplate);color:#fff}
-.menu li:nth-child(3) a:hover{background:var(--politika);color:#fff}
-.menu li:nth-child(5) a:hover{background:var(--kultura);color:#fff}
-.menu li:nth-child(6) a:hover{background:var(--sport);color:#fff}
-.menu li:nth-child(7) a:hover{background:var(--kontakt);color:#fff}
+.pill {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 7px 10px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    font-size: 11px;
+    color: #fff;
+    margin-bottom: 12px;
+}
 
-/* Ensure content not hidden under fixed header */
-main{padding-top:var(--header-h)}
+.hero-title {
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 12px 0 6px;
+    color: #fff;
+}
+
+.hero-subtitle {
+    color: rgba(255,255,255,0.8);
+    font-weight: 400;
+    font-size: clamp(15px, 1.8vw, 18px);
+    max-width: 68ch;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 2px solid transparent;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+}
+
+.btn.primary {
+    background: #E30613;
+    color: #fff;
+    border-color: #E30613;
+}
+
+.btn.primary:hover {
+    background: #C30010;
+    box-shadow: 0 10px 22px rgba(227,6,19,0.25);
+    transform: translateY(-2px);
+}
+
+.btn.outline {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+}
+
+.btn.outline:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+}
+
+/* Calculator Styling */
+.section { padding: 64px 0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.go-calc {
+    background: #F7F7F8;
+    border-top: 1px solid #E0E0E0;
+}
+
+.go-calc__wrap {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 24px;
+}
+
+.go-calc__card {
+    background: #fff;
+    border: 1px solid #E0E0E0;
+    border-radius: 14px;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.10);
+    padding: 20px;
+}
+
+.go-calc__title {
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-size: 24px;
+    margin: 0 0 6px;
+    color: #333333;
+}
+
+.go-calc__muted {
+    color: #666666;
+    margin: 0 0 16px;
+}
+
+.go-calc__plan {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.go-calc__pill {
+    border: 1px solid #E0E0E0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    user-select: none;
+    background: #fff;
+    color: #333333;
+}
+
+.go-calc__pill[aria-pressed="true"] {
+    background: #E30613;
+    color: #fff;
+    border-color: #E30613;
+}
+
+.go-calc__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.go-calc label {
+    display: block;
+    font-weight: 600;
+    margin: 8px 0 6px;
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #333333;
+}
+
+.go-calc input {
+    width: 100%;
+    border: 1px solid #E0E0E0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font: 16px/1.4 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    transition: border 0.2s, box-shadow 0.2s;
+    background: #fff;
+    color: #333333;
+}
+
+.go-calc input:focus {
+    outline: none;
+    border-color: #E30613;
+    box-shadow: 0 0 0 3px rgba(227,6,19,0.12);
+}
+
+.go-calc input[type="range"] {
+    accent-color: #E30613;
+}
+
+.help {
+    color: #666666;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.go-calc__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+}
+
+.go-calc__plan-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.go-calc__plan-card {
+    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+    border: 2px solid #E0E0E0;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+.go-calc__plan-card--best {
+    border-color: #E30613;
+    background: linear-gradient(135deg, #fff 0%, #fef7f7 100%);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(227,6,19,0.2);
+}
+
+.go-calc__plan-badge {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #E30613;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 0 0 8px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.go-calc__plan-header {
+    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.go-calc__plan-price {
+    font: 700 24px 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #E30613;
+    margin-bottom: 4px;
+}
+
+.go-calc__plan-monthly {
+    font-size: 12px;
+    color: #666666;
+    margin-bottom: 12px;
+}
+
+.go-calc__plan-details {
+    font-size: 11px;
+    color: #888888;
+    line-height: 1.4;
+}
+
+.go-calc__plan-details div {
+    margin-bottom: 2px;
+}
+
+@media (max-width: 768px) {
+    .go-calc__plan-cards {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .go-calc__plan-card--best {
+        transform: none;
+    }
+}
+
+.go-calc__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.go-calc__result-card {
+    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.go-calc__result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(227,6,19,0.15);
+    border-color: #E30613;
+}
+
+.go-calc__result-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #E30613, #C30010);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.go-calc__result-card:hover::before {
+    transform: scaleX(1);
+}
+
+.go-calc__monthly,
+.go-calc__fixed,
+.go-calc__variable {
+    font-size: 12px;
+    color: #666666;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.go-calc__summary {
+    background: #F7F7F8;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+    .go-calc__cards {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+.go-calc__stat {
+    border: 1px dashed #E0E0E0;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+}
+
+.go-calc__stat small {
+    display: block;
+    color: #666666;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.go-calc__big {
+    font: 700 28px 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #333333;
+}
+
+.note {
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+.note.ok { color: #00A859; }
+.note.warn { color: #FF8C00; }
+.note.info { color: #0066CC; }
+
+.muted {
+    color: #666666;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+@media (max-width: 980px) {
+    .go-calc__wrap {
+        grid-template-columns: 1fr;
+    }
+    .go-calc__row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+.content { height: 2000px; background: linear-gradient(#111, #222, #333); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #bbb; }
