@@ -9,12 +9,10 @@ export default function HeroSection() {
   useEffect(() => {
     const nav = navRef.current;
     const hero = heroRef.current;
-    // We need a reference to the main header to get its height
     const header = document.querySelector('.network-header') as HTMLElement;
 
     if (!nav || !hero || !header) return;
     
-    // Hysteresis gap so tiny scroll jitters don't toggle the state.
     const HYSTERESIS = 8; // px
 
     let triggerY = 0;
@@ -22,11 +20,8 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
-      // getBoundingClientRect is more reliable for positions relative to the viewport.
-      const heroRect = hero.getBoundingClientRect();
-      // We add window.scrollY to get the absolute position on the page.
-      const heroBottom = heroRect.bottom + window.scrollY;
-      return heroBottom - nav.offsetHeight - header.offsetHeight;
+      const heroTop = hero!.offsetTop;
+      return heroTop + hero!.offsetHeight - nav!.offsetHeight - header!.offsetHeight;
     }
 
     function recalc() {
@@ -35,14 +30,13 @@ export default function HeroSection() {
     }
 
     function updateOnScroll() {
-      const y = window.scrollY || document.documentElement.scrollTop;
+      const y = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Enter morph when we pass trigger; exit only when we go above trigger - HYSTERESIS
       if (!isMorphed && y >= triggerY) {
-        nav.classList.add('morph');
+        nav!.classList.add('morph');
         isMorphed = true;
-      } else if (isMorphed && y < triggerY - HYSTERESIS) {
-        nav.classList.remove('morph');
+      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
+        nav!.classList.remove('morph');
         isMorphed = false;
       }
     }
@@ -62,8 +56,8 @@ export default function HeroSection() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', recalc);
-
-    // A small delay and re-calculation can help if initial render dimensions are off
+    
+    // Use a timeout to ensure all elements have been rendered and have their final dimensions
     const timeoutId = setTimeout(recalc, 100);
 
     return () => {
