@@ -32,16 +32,16 @@ export default function HeroSection() {
       const rawT = (distToTouch - morphStartPadding) / navH;
       const targetT = clamp01(rawT);
       
-      const shouldStick = heroRect.bottom <= (headerH + navH);
+      const shouldStick = heroRect.bottom <= (headerH);
 
       if (!stuck && shouldStick) {
         nav.classList.add('morph');
         stuck = true;
-      } else if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
+      } else if (stuck && heroRect.bottom > (headerH + hysteresis)) {
         nav.classList.remove('morph');
         stuck = false;
       }
-
+      
       if (stuck) {
         setMorphT(1);
       } else {
