@@ -15,96 +15,107 @@ const navItems = [
 
 export default function Home() {
   const navRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number>();
 
   useEffect(() => {
     const nav = navRef.current;
-    const header = headerRef.current;
     const hero = heroRef.current;
+    const header = headerRef.current;
+    const root = document.documentElement;
 
-    if (!nav || !header || !hero) return;
-
-    const HYSTERESIS = 8;
-
-    let triggerY = 0;
-    let isMorphed = false;
-    let ticking = false;
-
-    function computeTriggerY() {
-      const heroTop = hero!.offsetTop;
-      return (
-        heroTop + hero!.offsetHeight - nav!.offsetHeight - header!.offsetHeight
-      );
-    }
-
-    function recalc() {
-      triggerY = computeTriggerY();
-      updateOnScroll();
-    }
-
-    function updateOnScroll() {
-      const y = window.pageYOffset || document.documentElement.scrollTop;
-      if (!isMorphed && y >= triggerY) {
-        nav!.classList.add('morph');
-        isMorphed = true;
-      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
-        nav!.classList.remove('morph');
-        isMorphed = false;
-      }
-    }
-
-    function onScroll() {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          updateOnScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', recalc);
+    if (!nav || !hero || !header) return;
     
-    // Use a timeout to ensure all elements have been rendered and have their final dimensions
-    const initTimeout = setTimeout(recalc, 100);
+    const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
+    let hysteresis = 6;
+    let morphRange = 220;
+
+    let targetT = 0;
+    let currentT = 0;
+    let stuck = false;
+
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+    const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
+
+    function measure() {
+      const heroRect = hero!.getBoundingClientRect();
+      const threshold = headerH + nav!.offsetHeight;
+      const dist = threshold - heroRect.bottom;
+      targetT = clamp01(dist / morphRange);
+    }
+
+    function applyStickyness() {
+      const heroRect = hero!.getBoundingClientRect();
+      if (!stuck && heroRect.bottom <= (headerH + nav!.offsetHeight)) {
+        nav!.classList.add('morph');
+        stuck = true;
+        currentT = 1;
+        setMorphT(currentT);
+      } else if (stuck && heroRect.bottom > (headerH + nav!.offsetHeight + hysteresis)) {
+        nav!.classList.remove('morph');
+        stuck = false;
+      }
+    }
+
+    function animate() {
+      currentT += (targetT - currentT) * 0.15;
+      setMorphT(currentT);
+      animationFrameRef.current = requestAnimationFrame(animate);
+    }
+
+    function onScrollOrResize() {
+      measure();
+      applyStickyness();
+    }
+    
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    
+    // Initial kick
+    measure();
+    applyStickyness();
+    animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', recalc);
-      clearTimeout(initTimeout);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
-      <header id="topHeader" ref={headerRef}>
-        <nav aria-label="Glavna navigacija">
-          <ul className="menu">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <Link
-                  href={item.href}
-                  aria-current={item.active ? 'page' : undefined}
-                  className={item.active ? 'active' : ''}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <header className="network-header" ref={headerRef}>
+        <div className="container">
+          <nav className="primary" aria-label="Glavna navigacija">
+            <ul className="menu">
+              {navItems.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    aria-current={item.active ? 'page' : undefined}
+                    className={item.active ? 'active' : ''}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </header>
 
-      <div className="hero" id="hero" ref={heroRef}>
-        <div className="overlay"></div>
-        <nav className="red-nav" id="morphNav" ref={navRef}></nav>
-      </div>
+      <main>
+        <section className="hero" id="goHero" aria-label="Hero" ref={heroRef}>
+          <div className="hero-overlay" aria-hidden="true"></div>
+          <nav className="go-nav" id="goNav" aria-label="Glas Otoka - traka" ref={navRef}></nav>
+        </section>
 
-      <div className="content">
-        Scroll test sadržaj – pomakni stranicu dolje.
-      </div>
+        <section className="spacer" aria-hidden="true"></section>
+      </main>
     </>
   );
 }
