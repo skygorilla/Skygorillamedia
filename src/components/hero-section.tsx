@@ -15,7 +15,7 @@ export default function HeroSection() {
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
     
     const hysteresis = 6;
-    const lerpFactor = 0.1;
+    const lerpFactor = 0.18;
     let targetT = 0;
     let currentT = 0;
     let stuck = false;
@@ -24,6 +24,7 @@ export default function HeroSection() {
     const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
 
     function computeTargetT() {
+      if (stuck) return 1;
       const heroRect = hero!.getBoundingClientRect();
       const navH = nav!.offsetHeight;
       const barTopY = heroRect.bottom - navH;
@@ -33,13 +34,14 @@ export default function HeroSection() {
     
     function applyStickiness() {
         const heroRect = hero!.getBoundingClientRect();
-        const navH = nav!.offsetHeight;
-        const shouldStick = heroRect.bottom <= (headerH + navH);
+        // This is the key change: The condition should check when the *bottom* of the hero
+        // is at or above the header height.
+        const shouldStick = heroRect.bottom <= headerH;
   
         if (!stuck && shouldStick) {
           nav!.classList.add('morph');
           stuck = true;
-        } else if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
+        } else if (stuck && heroRect.bottom > headerH + hysteresis) {
           nav!.classList.remove('morph');
           stuck = false;
         }
@@ -50,11 +52,7 @@ export default function HeroSection() {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        if (!stuck) {
-            targetT = computeTargetT();
-        } else {
-            targetT = 1;
-        }
+        targetT = computeTargetT();
         applyStickiness();
         ticking = false;
       });
@@ -62,19 +60,20 @@ export default function HeroSection() {
 
     function animate() {
       const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!isReduced) {
-        const delta = targetT - currentT;
-        if (Math.abs(delta) > 0.001) {
-            currentT += delta * lerpFactor;
-            setMorphT(currentT);
-        } else if (currentT !== targetT) {
-            currentT = targetT;
-            setMorphT(currentT);
-        }
-        requestAnimationFrame(animate);
-      } else {
+      if (isReduced) {
         setMorphT(targetT);
+        return;
       }
+      
+      const delta = targetT - currentT;
+      if (Math.abs(delta) > 0.001) {
+          currentT += delta * lerpFactor;
+          setMorphT(currentT);
+      } else if (currentT !== targetT) {
+          currentT = targetT;
+          setMorphT(currentT);
+      }
+      requestAnimationFrame(animate);
     }
     
     window.addEventListener('scroll', onScrollOrResize, { passive: true });
