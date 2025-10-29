@@ -35,12 +35,12 @@ export default function HeroSection() {
     function applyStickiness() {
         const heroRect = hero!.getBoundingClientRect();
         const navH = nav!.offsetHeight;
-        const shouldStick = heroRect.bottom <= (headerH + navH);
+        const shouldStick = heroRect.bottom < (headerH + navH);
   
         if (!stuck && shouldStick) {
           nav!.classList.add('morph');
           stuck = true;
-        } else if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
+        } else if (stuck && heroRect.bottom >= (headerH + navH + hysteresis)) {
           nav!.classList.remove('morph');
           stuck = false;
         }
@@ -61,6 +61,7 @@ export default function HeroSection() {
       const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (isReduced) {
         setMorphT(targetT);
+        requestAnimationFrame(animate);
         return;
       }
       
