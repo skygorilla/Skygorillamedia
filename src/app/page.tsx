@@ -67,6 +67,7 @@ export default function Home() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', recalc);
     
+    // Use a timeout to ensure all elements have been rendered and have their final dimensions
     const initTimeout = setTimeout(recalc, 100);
 
     return () => {
