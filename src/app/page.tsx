@@ -5,9 +5,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="pt-[var(--header-h)]">
+      <main>
         <HeroSection />
-        <div className="h-[1200px] bg-[#15161b]" aria-hidden="true" />
+        <section className="spacer" aria-hidden="true"></section>
       </main>
     </>
   );
