@@ -98,15 +98,9 @@ main{padding-top:var(--header-h)}
   border-bottom-left-radius: calc(var(--morphT) * var(--rMax));
   border-bottom-right-radius:calc(var(--morphT) * var(--rMax));
   box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:20;
-  transition:
-    box-shadow .45s,width .3s,
-    border-top-left-radius .25s, border-top-right-radius .25s,
-    border-bottom-left-radius .25s, border-bottom-right-radius .25s;
 }
 .go-nav.morph{
   position:fixed;top:var(--header-h);left:50%;transform:translateX(-50%);
-  border-top-left-radius:0;border-top-right-radius:0;
-  border-bottom-left-radius:var(--rMax);border-bottom-right-radius:var(--rMax);
   z-index:95;box-shadow:0 10px 28px rgba(0,0,0,.55);
 }
 
