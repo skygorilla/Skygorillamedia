@@ -75,8 +75,7 @@ export default function Home() {
     window.addEventListener('resize', onScrollOrResize);
     
     // Initial kick
-    measure();
-    applyStickyness();
+    onScrollOrResize();
     animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
