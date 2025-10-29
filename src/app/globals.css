@@ -87,21 +87,30 @@ main{padding-top:var(--header-h)}
 .hero{position:relative;width:100%;min-height:758px;overflow:hidden;background:radial-gradient(1200px 600px at 50% 60%, #1b1f2a 0%, #0b0c10 70%)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,.15));z-index:2}
 
-/* ====== RED MORPHING BAR (mirrored top ↔ bottom) ====== */
-.go-nav{
-  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
-  display:flex;justify-content:center;align-items:center;
-  width:min(85%,1280px);height:80px;background:var(--accent);
-  --morphT:0; --rMax:60px;
-  border-top-left-radius:  calc((1 - var(--morphT)) * var(--rMax));
-  border-top-right-radius: calc((1 - var(--morphT)) * var(--rMax));
-  border-bottom-left-radius: calc(var(--morphT) * var(--rMax));
-  border-bottom-right-radius:calc(var(--morphT) * var(--rMax));
-  box-shadow:0 4px 20px rgba(0,0,0,.4);z-index:20;
+.go-nav {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 85%;
+  height: 80px;
+  background-color: var(--accent);
+  border-radius: 60px 60px 0 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+  transition: border-radius 0.6s ease;
+  will-change: top, left, width, border-radius, transform;
 }
-.go-nav.morph{
-  position:fixed;top:var(--header-h);left:50%;transform:translateX(-50%);
-  z-index:95;box-shadow:0 10px 28px rgba(0,0,0,.55);
+
+.go-nav.morph {
+  position: fixed;
+  top: var(--header-h);
+  border-radius: 0 0 60px 60px;
+  z-index: 95;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
 }
 
 .spacer{height:1200px;background:#15161b}
