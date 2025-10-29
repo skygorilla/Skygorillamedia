@@ -34,12 +34,12 @@ export default function HeroSection() {
       
       const shouldStick = heroRect.bottom <= (headerH + navH);
 
-      if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
-        nav.classList.remove('morph');
-        stuck = false;
-      } else if (!stuck && shouldStick) {
+      if (!stuck && shouldStick) {
         nav.classList.add('morph');
         stuck = true;
+      } else if (stuck && heroRect.bottom > (headerH + navH + hysteresis)) {
+        nav.classList.remove('morph');
+        stuck = false;
       }
 
       if (stuck) {
