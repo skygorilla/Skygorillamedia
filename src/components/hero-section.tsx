@@ -14,10 +14,6 @@ export default function HeroSection() {
     const root = document.documentElement;
     const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
 
-    const morphStartPadding = 0;
-    const hysteresis = 6;
-    let stuck = false;
-
     const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
     const setMorphT = (t: number) => nav.style.setProperty('--morphT', t.toFixed(4));
 
@@ -25,26 +21,22 @@ export default function HeroSection() {
       if (!hero || !nav) return;
 
       const heroRect = hero.getBoundingClientRect();
-      const navH = nav.offsetHeight;
-      const touchLine = headerH;
-      const barTopY = heroRect.bottom - navH;
-      const distToTouch = touchLine - barTopY;
-      const rawT = (distToTouch - morphStartPadding) / navH;
-      const targetT = clamp01(rawT);
-      
-      const shouldStick = heroRect.bottom <= (headerH);
+      const shouldStick = heroRect.bottom <= headerH;
 
-      if (!stuck && shouldStick) {
-        nav.classList.add('morph');
-        stuck = true;
-      } else if (stuck && heroRect.bottom > (headerH + hysteresis)) {
-        nav.classList.remove('morph');
-        stuck = false;
-      }
-      
-      if (stuck) {
-        setMorphT(1);
+      if (shouldStick) {
+        if (!nav.classList.contains('morph')) {
+          nav.classList.add('morph');
+          setMorphT(1);
+        }
       } else {
+        if (nav.classList.contains('morph')) {
+          nav.classList.remove('morph');
+        }
+        const navH = nav.offsetHeight;
+        const barTopY = heroRect.bottom - navH;
+        const distToTouch = headerH - barTopY;
+        const rawT = distToTouch / navH;
+        const targetT = clamp01(rawT);
         setMorphT(targetT);
       }
     }
