@@ -3,116 +3,85 @@
 @tailwind utilities;
 
 *{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:#111;color:#fff;overflow-x:hidden}
 
-html,body {
-  height:100%;
-  overflow-x:hidden;
-  background:#0b0c10;
-  color:#fff;
-  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif
+/* Fiksni header (plav) */
+header{
+  position:fixed; top:0; left:0; width:100%; height:40px;
+  background-color:#0057b8; z-index:30; transition:background-color .3s ease, height .2s ease; /* keep blue; no color swap */
 }
 
-:root{
-  --header-h:40px;
-  --container-w:1200px;
-  --bg:#2d2e34;
-  --fg:#b9bcbd;
-  --accent:#C8091E;
-  --uvod:#0077ff;
-  --pretplate:#00b894;
-  --politika:#f39c12;
-  --kultura:#9b59b6;
-  --sport:#16a085;
-  --kontakt:#e67e22;
+/* HERO (slider placeholder) */
+.hero{ position:relative; width:100%; height:758px; overflow:hidden; background:#000; }
 
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 352 90% 42%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent-color: 217 100% 50%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-  --radius: 0.5rem;
+.overlay{ position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.7),rgba(0,0,0,.2)); z-index:2; }
+
+/* CRVENI MORPH SEGMENT – start na dnu hero, zaobljen prema gore */
+.red-nav{
+  position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  display:flex; justify-content:center; align-items:center;
+  width:85%; height:80px; background-color:#c8091e;
+  border-radius:60px 60px 0 0; /* zaobljeni gornji rubovi */
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  z-index:20; transition: border-radius .6s ease; will-change:top,left,width,border-radius,transform; /* smoother */
 }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 352 90% 42%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent-color: 217 100% 50%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+/* Kada dotakne header: fiksira se ispod headera i zrcali (rub prema dolje) */
+.red-nav.morph{
+  position:fixed; top:40px;
+  border-radius:0 0 60px 60px; /* zrcaljeni rub prema dolje */
+  z-index:25;
 }
 
+/* Demo sadržaj za scroll */
+.content{ height:1200px; background:linear-gradient(#111,#222,#333); display:flex; justify-content:center; align-items:center; font-size:2rem; color:#bbb; }
 
-.network-header{background:var(--bg);box-shadow:0 0 1px 1px rgba(0,0,0,.5),0 1px 5px 0 rgba(0,0,0,.35),inset 0 -1px 0 0 rgba(0,0,0,.15),inset 0 1px 0 0 hsla(0,0%,100%,.1);position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;text-align:center;z-index:30;height:var(--header-h)}
-.network-header .container{max-width:var(--container-w);height:100%;margin:0 auto;display:flex;align-items:center;justify-content:center;padding:0 16px}
-.menu{list-style:none;display:flex;justify-content:center;align-items:center;gap:10px;margin:0;height:100%;font-family:'Open Sans',sans-serif}
-.menu a{display:flex;align-items:center;justify-content:center;color:var(--fg);font-size:11px;font-weight:700;letter-spacing:.5px;text-decoration:none;text-transform:uppercase;text-shadow:0 1px 1px rgba(0,0,0,.75);transition:color .2s ease,background .2s ease,transform .2s ease;padding:0 12px;height:calc(var(--header-h) - 10px);line-height:calc(var(--header-h) - 10px);margin:5px 0;border-radius:4px;background:var(--bg)}
-.menu a.active{background-color:var(--accent);color:#fff;font-weight:700;height:var(--header-h);line-height:var(--header-h);margin:0;border-radius:0}
-.menu li:nth-child(1) a:hover{background:var(--uvod);color:#fff}
-.menu li:nth-child(2) a:hover{background:var(--pretplate);color:#fff}
-.menu li:nth-child(3) a:hover{background:var(--politika);color:#fff}
-.menu li:nth-child(5) a:hover{background:var(--kultura);color:#fff}
-.menu li:nth-child(6) a:hover{background:var(--sport);color:#fff}
-.menu li:nth-child(7) a:hover{background:var(--kontakt);color:#fff}
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --radius: 0.5rem;
+  }
 
-main{padding-top:var(--header-h)}
-
-.hero{position:relative;width:100%;min-height:758px;overflow:hidden;background:radial-gradient(1200px 600px at 50% 60%, #1b1f2a 0%, #0b0c10 70%)}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,.15));z-index:2}
-
-.go-nav {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 85%;
-  height: 80px;
-  background-color: var(--accent);
-  border-radius: 60px 60px 0 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 20;
-  transition: border-radius 0.6s ease;
-  will-change: top, left, width, border-radius, transform;
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
-
-.go-nav.morph {
-  position: fixed;
-  top: 40px;
-  border-radius: 0 0 60px 60px;
-  z-index: 25;
-}
-
-.spacer{height:1200px;background:#15161b}
 
 @layer base {
   * {

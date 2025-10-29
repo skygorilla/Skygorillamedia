@@ -1,10 +1,83 @@
-// This component is a workaround to serve a single, static HTML page
-// in a Next.js environment. It directly renders a minified HTML string.
+'use client';
 
-const minifiedHtml = `<!doctype html><html lang="hr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Hero Section – Glas Otoka</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:#111;color:#fff;overflow-x:hidden}header{position:fixed;top:0;left:0;width:100%;height:40px;background-color:#0057b8;z-index:30;transition:background-color .3s ease,height .2s ease}.hero{position:relative;width:100%;height:758px;overflow:hidden;background:#000}.overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7),rgba(0,0,0,.2));z-index:2}.red-nav{position:absolute;left:50%;bottom:0;transform:translateX(-50%);display:flex;justify-content:center;align-items:center;width:85%;height:80px;background-color:#c8091e;border-radius:60px 60px 0 0;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:20;transition:border-radius .6s ease;will-change:top,left,width,border-radius,transform}.red-nav.morph{position:fixed;top:40px;left:50%;transform:translateX(-50%);width:85%;height:80px;background-color:#c8091e;border-radius:0 0 60px 60px;z-index:25}.content{height:1200px;background:linear-gradient(#111,#222,#333);display:flex;justify-content:center;align-items:center;font-size:2rem;color:#bbb}</style></head><body><header id="topHeader"></header><div class="hero" id="hero"><div class="overlay"></div><nav class="red-nav" id="morphNav"></nav></div><div class="content">Scroll test sadržaj – pomakni stranicu dolje.</div><script>!function(){const t=document.getElementById("morphNav"),e=document.getElementById("topHeader"),o=document.getElementById("hero");let n=0,i=!1,d=!1;function a(){n=function(){const n=o.offsetTop;return n+o.offsetHeight-t.offsetHeight-e.offsetHeight}(),c()}function c(){const o=window.pageYOffset||document.documentElement.scrollTop;!i&&o>=n?(t.classList.add("morph"),i=!0):i&&o<=n-8&&(t.classList.remove("morph"),i=!1)}window.addEventListener("scroll",function(){d||(window.requestAnimationFrame(()=>{c(),d=!1}),d=!0)},{passive:!0}),window.addEventListener("resize",a),window.addEventListener("load",a),a()}()</script></body></html>`;
+import { useEffect, useRef } from 'react';
 
 export default function Home() {
+  const navRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    const header = headerRef.current;
+    const hero = heroRef.current;
+
+    if (!nav || !header || !hero) return;
+
+    const HYSTERESIS = 8;
+
+    let triggerY = 0;
+    let isMorphed = false;
+    let ticking = false;
+
+    function computeTriggerY() {
+      const heroTop = hero!.offsetTop;
+      return (
+        heroTop + hero!.offsetHeight - nav!.offsetHeight - header!.offsetHeight
+      );
+    }
+
+    function recalc() {
+      triggerY = computeTriggerY();
+      updateOnScroll();
+    }
+
+    function updateOnScroll() {
+      const y = window.pageYOffset || document.documentElement.scrollTop;
+      if (!isMorphed && y >= triggerY) {
+        nav!.classList.add('morph');
+        isMorphed = true;
+      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
+        nav!.classList.remove('morph');
+        isMorphed = false;
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateOnScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', recalc);
+    
+    // Initial calculation after a short delay to ensure layout is stable
+    const initTimeout = setTimeout(recalc, 100);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', recalc);
+      clearTimeout(initTimeout);
+    };
+  }, []);
+
   return (
-    <div dangerouslySetInnerHTML={{ __html: minifiedHtml }} />
+    <>
+      <header id="topHeader" ref={headerRef}></header>
+
+      <div className="hero" id="hero" ref={heroRef}>
+        <div className="overlay"></div>
+        <nav className="red-nav" id="morphNav" ref={navRef}></nav>
+      </div>
+
+      <div className="content">
+        Scroll test sadržaj – pomakni stranicu dolje.
+      </div>
+    </>
   );
 }
