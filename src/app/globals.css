@@ -8,7 +8,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue"
 /* Fiksni header */
 header{
   position:fixed; top:0; left:0; width:100%; height:40px;
-  background-color:#0057b8; z-index:30; transition:background-color .3s ease, height .2s ease;
+  z-index:30; transition:background-color .3s ease, height .2s ease;
   display: flex;
   justify-content: center;
   align-items: center;
