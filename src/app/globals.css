@@ -100,23 +100,6 @@
 
 @layer components {
   .go-nav {
-    border-top-left-radius: var(--rMax);
-    border-top-right-radius: var(--rMax);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    transition: all .45s;
-  }
-
-  .go-nav.morph {
-    position: fixed;
-    top: var(--header-h);
-    left: 50%;
-    transform: translateX(-50%);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: var(--rMax);
-    border-bottom-right-radius: var(--rMax);
-    z-index: 95;
-    box-shadow: 0 10px 28px rgba(0,0,0,.55);
+    transition: all .3s ease-out;
   }
 }
