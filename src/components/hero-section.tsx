@@ -9,10 +9,9 @@ export default function HeroSection() {
   useEffect(() => {
     const nav = navRef.current;
     const hero = heroRef.current;
-    if (!nav || !hero) return;
-
     const root = document.documentElement;
-    const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
+
+    if (!nav || !hero) return;
     
     // Hysteresis gap so tiny scroll jitters don't toggle the state.
     const HYSTERESIS = 8; // px
@@ -22,6 +21,7 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
+      const headerH = parseFloat(getComputedStyle(root).getPropertyValue('--header-h')) || 40;
       // getBoundingClientRect is more reliable in React than offsetTop
       const heroRect = hero.getBoundingClientRect();
       // Add the current scroll position to get the absolute top of the hero
