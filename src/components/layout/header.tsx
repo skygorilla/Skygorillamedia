@@ -3,7 +3,6 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '#', label: 'Uvod' },
@@ -29,10 +28,7 @@ export default function Home() {
                   <Link
                     href={item.href}
                     aria-current={item.special ? 'page' : undefined}
-                    className={cn(
-                        item.special ? 'glas-otoka-link' : '',
-                        {'active': item.label === 'Glas Otoka'}
-                    )}
+                    className={item.special ? 'active' : ''}
                   >
                     {item.label}
                   </Link>
@@ -45,3 +41,5 @@ export default function Home() {
     </>
   );
 }
+
+    
