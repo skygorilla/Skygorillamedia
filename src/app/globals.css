@@ -81,6 +81,10 @@
     color: hsl(var(--primary-foreground));
     height: 40px; margin: 0; border-radius: 0;
 }
+.menu a.glas-otoka-link {
+    color: hsl(var(--primary));
+}
+
 .menu li:not(:nth-child(4)) a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
 
@@ -215,7 +219,7 @@
 
 .go-calc__plan-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 12px;
     margin-top: 20px;
 }
@@ -494,4 +498,30 @@
     top: 40px; /* Height of the network-header */
     border-radius: 0 0 60px 60px;
     z-index: 25; /* Below header, above hero content */
+}
+
+/* Connecting Line */
+.connecting-dot {
+    position: fixed;
+    top: 40px; /* network-header height */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    background-color: hsl(var(--primary));
+    z-index: 50;
+    height: 0;
+    transition: height 0.2s ease-out;
+}
+
+.connecting-line {
+    position: fixed;
+    top: 120px; /* After red-nav morphs (40px header + 80px nav) */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background-color: hsl(var(--primary));
+    z-index: 10;
+    height: 0;
+    transition: height 0.3s ease-out;
+    opacity: 0.6;
 }

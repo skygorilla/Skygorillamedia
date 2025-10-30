@@ -1,13 +1,15 @@
+
 'use client';
 
 import { useRef } from 'react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '#', label: 'Uvod' },
   { href: '#', label: 'Pretplate' },
   { href: '#', label: 'Politika' },
-  { href: '#glasotoka', label: 'Glas Otoka', active: true },
+  { href: '#glasotoka', label: 'Glas Otoka', special: true },
   { href: '#', label: 'Kultura' },
   { href: '#', label: 'Sport' },
   { href: '#', label: 'Kontakt' },
@@ -26,8 +28,11 @@ export default function Home() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    aria-current={item.active ? 'page' : undefined}
-                    className={item.active ? 'active' : ''}
+                    aria-current={item.special ? 'page' : undefined}
+                    className={cn(
+                        item.special ? 'glas-otoka-link' : '',
+                        {'active': item.label === 'Glas Otoka'}
+                    )}
                   >
                     {item.label}
                   </Link>
