@@ -1,0 +1,22 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "A view of a coastal town with mountains in the background.",
+      "imageUrl": "https://picsum.photos/seed/hero1/1920/1080",
+      "imageHint": "coast landscape"
+    },
+    {
+      "id": "hero-2",
+      "description": "A boat sailing on the sea near a rocky shore.",
+      "imageUrl": "https://picsum.photos/seed/hero2/1920/1080",
+      "imageHint": "sailing boat"
+    },
+    {
+      "id": "hero-3",
+      "description": "An aerial view of a person kitesurfing on the ocean.",
+      "imageUrl": "https://picsum.photos/seed/hero3/1920/1080",
+      "imageHint": "kitesurfing aerial"
+    }
+  ]
+}

@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const heroImages = PlaceHolderImages.filter(img => img.id.startsWith('hero-'));
 
 export default function HeroSection() {
   const navRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const nav = navRef.current;
@@ -21,7 +26,6 @@ export default function HeroSection() {
     let ticking = false;
 
     function computeTriggerY() {
-      // This logic is based on simple-morph.html
       return hero!.offsetTop + hero!.offsetHeight - nav!.offsetHeight - header!.offsetHeight;
     }
 
@@ -52,7 +56,6 @@ export default function HeroSection() {
       updateOnScroll();
     }
     
-    // Initial calculation and setup
     init();
     
     const timeoutId = setTimeout(init, 100);
@@ -60,38 +63,34 @@ export default function HeroSection() {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', init);
     
-    // Slider functionality
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
-    let slideInterval: NodeJS.Timeout;
-
-    if (slides.length > 0) {
-        slides[0].classList.add('active');
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-        slideInterval = setInterval(nextSlide, 4000);
-    }
+    const slideInterval = setInterval(() => {
+        setCurrentSlide(prev => (prev + 1) % heroImages.length);
+    }, 4000);
 
 
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', init);
       clearTimeout(timeoutId);
-      if (slideInterval) {
-        clearInterval(slideInterval);
-      }
+      clearInterval(slideInterval);
     };
   }, []);
 
   return (
     <section className="hero" id="hero" aria-label="Hero" ref={heroRef}>
       <div className="slider">
-        <div className="slide active" style={{backgroundImage: "url('https://i.ibb.co/YdhgMmM/1067-1.jpg')"}}></div>
-        <div className="slide" style={{backgroundImage: "url('https://i.ibb.co/wz2yQvV/1067-2.jpg')"}}></div>
-        <div className="slide" style={{backgroundImage: "url('https://i.ibb.co/ckYc82Y/1067-3.jpg')"}}></div>
+        {heroImages.map((image, index) => (
+            <div key={image.id} className={`slide ${index === currentSlide ? 'active' : ''}`}>
+                <Image
+                    src={image.imageUrl}
+                    alt={image.description}
+                    fill
+                    priority={index === 0}
+                    style={{ objectFit: 'cover' }}
+                    data-ai-hint={image.imageHint}
+                />
+            </div>
+        ))}
       </div>
       <div className="overlay" aria-hidden="true"></div>
       <div className="hero-content">
