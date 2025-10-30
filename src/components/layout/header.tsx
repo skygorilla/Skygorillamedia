@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useRef } from 'react';
+import { forwardRef } from 'react';
 import Link from 'next/link';
 
 const navItems = [
@@ -14,32 +14,30 @@ const navItems = [
   { href: '#', label: 'Kontakt' },
 ];
 
-export default function Home() {
-  const headerRef = useRef<HTMLElement>(null);
-
+const Header = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <>
-      <header className="network-header" id="topHeader" ref={headerRef}>
-        <div className="container">
-          <nav aria-label="Glavna navigacija">
-            <ul className="menu">
-              {navItems.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    aria-current={item.special ? 'page' : undefined}
-                    className={item.special ? 'active' : ''}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </header>
-    </>
+    <header className="network-header" id="topHeader" ref={ref}>
+      <div className="container">
+        <nav aria-label="Glavna navigacija">
+          <ul className="menu">
+            {navItems.map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
+                  aria-current={item.special ? 'page' : undefined}
+                  className={item.special ? 'active' : ''}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
   );
-}
+});
 
-    
+Header.displayName = 'Header';
+
+export default Header;

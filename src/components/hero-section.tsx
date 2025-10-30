@@ -1,77 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, RefObject } from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const heroImages = PlaceHolderImages.filter(img => img.id.startsWith('hero-'));
 
-export default function HeroSection() {
-  const navRef = useRef<HTMLElement>(null);
-  const heroRef = useRef<HTMLElement>(null);
+interface HeroSectionProps {
+  navRef: RefObject<HTMLElement>;
+  heroRef: RefObject<HTMLElement>;
+}
+
+export default function HeroSection({ navRef, heroRef }: HeroSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    const nav = navRef.current;
-    const hero = heroRef.current;
-    const header = document.getElementById('topHeader');
-
-    if (!nav || !hero || !header) {
-      return;
-    }
-
-    const HYSTERESIS = 24;
-    let triggerY = 0;
-    let isMorphed = false;
-    let ticking = false;
-
-    function computeTriggerY() {
-      return hero!.offsetTop + hero!.offsetHeight - nav!.offsetHeight - header!.offsetHeight;
-    }
-
-    function updateOnScroll() {
-      const y = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (!isMorphed && y >= triggerY) {
-        nav!.classList.add('morph');
-        isMorphed = true;
-      } else if (isMorphed && y <= triggerY - HYSTERESIS) {
-        nav!.classList.remove('morph');
-        isMorphed = false;
-      }
-    }
-
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateOnScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    function init() {
-      triggerY = computeTriggerY();
-      updateOnScroll();
-    }
-    
-    init();
-    
-    const timeoutId = setTimeout(init, 100);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', init);
-    
     const slideInterval = setInterval(() => {
         setCurrentSlide(prev => (prev + 1) % heroImages.length);
     }, 4000);
 
-
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', init);
-      clearTimeout(timeoutId);
       clearInterval(slideInterval);
     };
   }, []);
