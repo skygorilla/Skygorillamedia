@@ -2,12 +2,14 @@
 
 import Header from '@/components/layout/header';
 import Calculator from '@/components/calculator';
+import HeroSection from '@/components/hero-section';
 
 export default function Home() {
   return (
     <>
       <Header />
       <main>
+        <HeroSection />
         <section className="section go-calc" id="go-calculator" aria-labelledby="calc-title">
           <div className="container go-calc__wrap">
             <div className="go-calc__card">
@@ -110,11 +112,11 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <Calculator />
             </div>
           </div>
         </section>
         <div className="content"></div>
+        <Calculator />
       </main>
     </>
   );
