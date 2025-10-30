@@ -1,201 +1,172 @@
 
-"use client";
+'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
+// Final pricing tiers from the spec
 const packages = {
-  mini: { sub: 600, label: 'Mini', type: 'flat', rates: { flat: 150 }, description: "Osnovni paket za do 20 objava." },
-  standard: { sub: 1200, label: 'Standard', type: 'marginal', rates: [{ upto: 20, price: 150 }, { upto: Infinity, price: 100 }], description: "Optimalan omjer za 20-30 objava." },
-  prosireni: { sub: 2500, label: 'Prošireni', type: 'marginal', rates: [{ upto: 20, price: 150 }, { upto: 30, price: 100 }, { upto: Infinity, price: 70 }], description: "Najbolja vrijednost za 30+ objava." }
+  mini: { sub: 600, rate: 250, label: 'Mini', volume: [1, 10], description: "Za male udruge i škole (1-10 događaja)." },
+  standard: { sub: 1800, rate: 210, label: 'Standard', volume: [11, 40], description: "Za TZ, sport i kulturu (10-40 događaja)." },
+  partner: { sub: 3600, rate: 180, label: 'Partner', volume: [41, 80], description: "Za gradove i institucije (40-80 događaja)." },
+  otok_plus: { sub: 6000, rate: 150, label: 'Otok+', volume: [81, 120], description: "Full media service za multi-partnere (80-120 događaja)." }
 };
 
+type PlanKey = keyof typeof packages;
+
 type PlanResult = {
-  name: string;
+  name: PlanKey;
   label: string;
   total: number;
   sub: number;
   variable: number;
   monthly: number;
   n: number;
+  eventRate: number;
 };
 
-const chartConfig = {
-  total: {
-    label: "Ukupni trošak",
-  },
-  mini: {
-    label: "Mini",
-    color: "hsl(var(--chart-2))",
-  },
-  standard: {
-    label: "Standard",
-    color: "hsl(var(--chart-2))",
-  },
-  prosireni: {
-    label: "Prošireni",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig;
+// Helper to select plan based on volume
+const getPlanByVolume = (n: number): PlanKey => {
+  if (n <= 10) return 'mini';
+  if (n <= 40) return 'standard';
+  if (n <= 80) return 'partner';
+  return 'otok_plus';
+};
 
+const roundToNearest10 = (num: number) => Math.round(num / 10) * 10;
 
 export default function Calculator() {
   const [events, setEvents] = useState(12);
-  const [adhocPrice, setAdhocPrice] = useState(220);
-  const [results, setResults] = useState<PlanResult[]>([]);
-  const [recommendation, setRecommendation] = useState('');
+  const [isIndexed, setIsIndexed] = useState(false);
+  const [isAssociation, setIsAssociation] = useState(false);
+  const [result, setResult] = useState<PlanResult | null>(null);
 
-  const hr = new Intl.NumberFormat('hr-HR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-
-  const marginalVariableCost = (plan: string, n: number): number => {
-    const pkg = packages[plan as keyof typeof packages];
-    if (pkg.type === 'flat' && pkg.rates.flat) {
-      return n * pkg.rates.flat;
-    }
-
-    let left = n;
-    let cost = 0;
-    let prev = 0;
-    if (pkg.type === 'marginal' && Array.isArray(pkg.rates)) {
-      for (const r of pkg.rates) {
-        if (left <= 0) break;
-        const bandCount = Math.max(0, Math.min(left, r.upto === Infinity ? left : r.upto - prev));
-        cost += bandCount * r.price;
-        left -= bandCount;
-        prev = r.upto === Infinity ? prev + bandCount : r.upto;
-      }
-    }
-    return cost;
-  }
-
-  const calculateAllCosts = (n: number): PlanResult[] => {
-    return Object.keys(packages).map(pKey => {
-      const pkg = packages[pKey as keyof typeof packages];
-      const variable = marginalVariableCost(pKey, n);
-      const total = pkg.sub + variable;
-      return {
-        name: pKey,
-        label: pkg.label,
-        total: total,
-        sub: pkg.sub,
-        variable: variable,
-        monthly: Math.round(total / 12),
-        n: n,
-      };
-    });
-  }
+  const hr = useMemo(() => new Intl.NumberFormat('hr-HR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }), []);
 
   useEffect(() => {
-    const allPlans = calculateAllCosts(events);
-    setResults(allPlans);
+    const cappedEvents = Math.min(events, 120);
+    const planKey = getPlanByVolume(cappedEvents);
+    const plan = packages[planKey];
 
-    if (events > 0) {
-      const sortedPlans = [...allPlans].sort((a, b) => a.total - b.total);
-      const bestPlan = sortedPlans[0];
-      const secondBest = sortedPlans[1];
-
-      if (bestPlan && secondBest) {
-        const savingVsSecond = secondBest.total - bestPlan.total;
-        if (savingVsSecond > 0) {
-          setRecommendation(`Za <strong>${events}</strong> isporuka, <strong>${bestPlan.label}</strong> paket je najisplativiji.`);
-        } else {
-          setRecommendation(`Za <strong>${events}</strong> isporuka, paketi imaju sličnu isplativost.`);
-        }
-      }
-    } else {
-      setRecommendation("Pomaknite klizač za izračun.");
+    let eventRate = plan.rate;
+    if (isIndexed) {
+      eventRate = roundToNearest10(plan.rate * 1.075);
     }
-  }, [events, adhocPrice]);
-  
-  const chartData = useMemo(() => {
-    if (!results.length) return [];
     
-    const bestPlanName = events > 0 ? results.sort((a,b) => a.total - b.total)[0].name : '';
+    const variableCost = cappedEvents * eventRate;
+    const totalCost = plan.sub + variableCost;
     
-    return results.map(plan => ({
-      name: plan.label,
-      total: plan.total,
-      fill: plan.name === bestPlanName ? 'hsl(var(--primary))' : 'hsl(var(--chart-2))'
-    }));
-  }, [results, events]);
+    setResult({
+      name: planKey,
+      label: plan.label,
+      total: totalCost,
+      sub: plan.sub,
+      variable: variableCost,
+      monthly: Math.round(totalCost / 12),
+      n: cappedEvents,
+      eventRate: eventRate
+    });
+
+  }, [events, isIndexed]);
+
+  const displayedPlans = Object.keys(packages).filter(p => p !== 'otok_plus' || events >= 80) as PlanKey[];
 
   return (
     <section className="section go-calc" id="go-calculator" aria-labelledby="calc-title">
-      <div className="container go-calc__wrap">
-        {/* Left Panel: Controls */}
-        <div className="flex flex-col">
-           <h2 id="calc-title" className="go-calc__title">Kalkulator troškova</h2>
-           <p className="go-calc__muted mb-6">Pronađite najisplativiji paket za vaše potrebe.</p>
-          
-           <div className="mb-8 flex-grow">
-              <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje: <span className="text-primary font-bold text-lg ml-2">{events}</span></label>
-              <input 
-                id="go-events" 
-                type="range" 
-                min="0" max="60" 
-                step="1" 
-                value={events} 
-                onChange={(e) => setEvents(parseInt(e.target.value, 10))}
-                className='w-full' 
-              />
-          </div>
+      <div className="container text-center mb-8">
+        <h2 className="text-3xl font-bold tracking-tight">Kalkulator paketa</h2>
+        <p className="text-lg text-muted-foreground mt-2">Radimo zajedno — jer zajednica bez zajedništva nema medij.</p>
+      </div>
+      <div className="container go-calc__wrap max-w-4xl mx-auto">
+        {/* Controls */}
+        <div className="go-calc__card flex flex-col justify-between">
+          <div>
+            <h3 id="calc-title" className="go-calc__title">Prilagodite vaš paket</h3>
+            <p className="go-calc__muted mb-6">Pomaknite klizač kako biste odabrali broj godišnjih događaja.</p>
+            
+            <div className="mb-6">
+                <label htmlFor="go-events" className='font-semibold text-sm mb-2 block text-left'>Broj događaja godišnje: <span className="text-primary font-bold text-lg ml-2">{Math.min(events, 120)}</span></label>
+                <input 
+                  id="go-events" 
+                  type="range" 
+                  min="1" max="130"
+                  step="1" 
+                  value={events} 
+                  onChange={(e) => setEvents(parseInt(e.target.value, 10))}
+                  className='w-full' 
+                />
+                {events > 120 && (
+                     <p className="text-sm text-yellow-600 mt-2 text-center font-semibold">Za više od 120 događaja, molimo <a href="#kontakt" className="underline">kontaktirajte nas</a>.</p>
+                )}
+            </div>
 
-          <div className="go-calc__stat go-calc__stat--input mt-4 md:mt-0">
-              <small>Usporedna ad-hoc cijena (€/isporuka)</small>
-              <input 
-                id="go-adhoc" 
-                type="number" 
-                value={adhocPrice} 
-                onChange={(e) => setAdhocPrice(parseInt(e.target.value, 10) || 0)}
-                inputMode="numeric" 
-                className="go-calc__big-input" 
-              />
+            <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2">
+                    <Switch id="indexing-switch" checked={isIndexed} onCheckedChange={setIsIndexed} />
+                    <Label htmlFor="indexing-switch" className="text-sm">Indexacija (2025)</Label>
+                </div>
+                 <div className="flex items-center space-x-2">
+                    <Switch id="association-switch" checked={isAssociation} onCheckedChange={setIsAssociation} />
+                    <Label htmlFor="association-switch" className="text-sm">Udruga / Škola</Label>
+                </div>
+            </div>
+
+             {isIndexed && (
+                <div className="mt-4 p-2 bg-blue-50 border border-blue-200 rounded-md text-xs text-blue-700">
+                    <span className="font-bold">Indexirano prema DZS 2025 (+7.5%).</span>
+                    <p className="text-xs">Cijene uključuju mogućnost godišnje usklađene prema indeksu usluga.</p>
+                </div>
+            )}
+             {isAssociation && result?.name === 'mini' && (
+                <div className="mt-4 p-2 bg-green-50 border border-green-200 rounded-md text-xs text-green-800">
+                   <p><strong>Savjet:</strong> Udružite se s drugim udrugama kako biste prešli u veći paket i ostvarili nižu cijenu po događaju!</p>
+                </div>
+            )}
+
           </div>
-          
-          {recommendation && <div className="muted mt-6 text-center text-base" dangerouslySetInnerHTML={{ __html: recommendation }}></div>}
         </div>
 
-        {/* Right Panel: Chart */}
-        <div className="go-calc__card -mt-4 md:mt-0">
-          <h3 className="text-lg font-semibold mb-1">Godišnji trošak po paketima</h3>
-          <p className="text-sm text-muted-foreground mb-4">Usporedba ukupnih troškova za {events} isporuka.</p>
-          <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
-            <ResponsiveContainer width="100%" height={250}>
-                <BarChart accessibilityLayer data={chartData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="name"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                   <YAxis
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${hr.format(value as number)}`}
-                   />
-                  <Tooltip
-                    cursor={false}
-                    content={<ChartTooltipContent
-                        formatter={(value, name) => (
-                            <div className="flex flex-col">
-                                <span className="font-bold">{name}</span>
-                                <span className='text-primary font-semibold'>{hr.format(value as number)}</span>
-                            </div>
-                        )}
-                        indicator='dot'
-                    />}
-                  />
-                  <Bar dataKey="total" radius={4} />
-                </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+        {/* Results */}
+        <div className="go-calc__card flex flex-col justify-center">
+            {result && (
+                 <>
+                    <div className="text-center">
+                        <p className="text-sm text-muted-foreground">Preporučeni paket</p>
+                        <p className="text-3xl font-bold text-primary">{result.label}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 my-6 text-center">
+                        <div className="go-calc__stat p-4">
+                            <small>Ukupno/god</small>
+                            <div className="go-calc__big">{hr.format(result.total)}</div>
+                        </div>
+                        <div className="go-calc__stat p-4">
+                            <small>Mjesečno</small>
+                            <div className="go-calc__big">{hr.format(result.monthly)}</div>
+                        </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground space-y-1 text-center">
+                        <p>Pretplata: <strong>{hr.format(result.sub)}</strong></p>
+                        <p>Događaji: {result.n} × <strong>{hr.format(result.eventRate)}</strong> = {hr.format(result.variable)}</p>
+                    </div>
+                 </>
+            )}
         </div>
       </div>
+       <div className="container max-w-4xl mx-auto mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+         {displayedPlans.map(pKey => {
+           const plan = packages[pKey];
+           const isActive = result?.name === pKey;
+           return (
+             <div key={pKey} className={`p-4 border rounded-lg text-center ${isActive ? 'border-primary bg-primary/5' : 'border-border'}`}>
+               <h4 className="font-bold">{plan.label}</h4>
+               <p className="text-xs text-muted-foreground">{plan.volume[0]}-{plan.volume[1]} događaja</p>
+             </div>
+           );
+         })}
+       </div>
     </section>
   );
 }
+
+    
