@@ -110,12 +110,12 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              <Calculator />
             </div>
           </div>
         </section>
         <div className="content"></div>
       </main>
-      <Calculator />
     </>
   );
 }
