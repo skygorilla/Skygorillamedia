@@ -1,10 +1,66 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif; background: #000; color: #fff; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Original Header Design */
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 356 97% 44%; /* A1 Red: #E30613 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 356 97% 44%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 356 97% 44%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 356 97% 44%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Original Header Design - Adapted for new theme */
 .network-header {
-    background: #2d2e34;
+    background: #2d2e34; /* Keeping original dark header for contrast */
     position: fixed; top: 0; left: 0; width: 100%; text-align: center; z-index: 100; height: 40px;
 }
 .network-header .container { max-width: 1200px; height: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 16px; }
@@ -12,93 +68,18 @@ body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
 .menu a {
     display: flex; align-items: center; justify-content: center; color: #b9bcbd; font-size: 11px; font-weight: 700;
     letter-spacing: .5px; text-decoration: none; text-transform: uppercase; text-shadow: 0 1px 1px rgba(0,0,0,.75);
-    transition: color .2s ease, background .2s ease; padding: 0 12px; height: 30px; margin: 5px 0; border-radius: 4px; background: #2d2e34;
+    transition: color .2s ease, background .2s ease; padding: 0 12px; height: 30px; margin: 5px 0; border-radius: 4px; background: transparent;
 }
-.menu a.active { 
-    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.3) 49%, transparent 50%, rgba(0,0,0,0.1) 51%, rgba(0,0,0,0.2) 100%), #8b0000;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-    color: #fff; height: 40px; margin: 0; border-radius: 0;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.7);
+.menu a.active {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    height: 40px; margin: 0; border-radius: 0;
 }
-.menu li:nth-child(1) a:hover { background: #0077ff; color: #fff; }
-.menu li:nth-child(2) a:hover { background: #00b894; color: #fff; }
-.menu li:nth-child(3) a:hover { background: #f39c12; color: #fff; }
-.menu li:nth-child(5) a:hover { background: #9b59b6; color: #fff; }
-.menu li:nth-child(6) a:hover { background: #16a085; color: #fff; }
-.menu li:nth-child(7) a:hover { background: #e67e22; color: #fff; }
+.menu li:not(:nth-child(4)) a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
-header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background: #0057b8; z-index: 30; }
 
-.hero { position: relative; width: 100%; height: 758px; background: #000; overflow: hidden; }
-.curved-element { width: 100%; height: 400px; background: rgb(45, 46, 52); clip-path: ellipse(100% 50% at 50% 0%); }
-.slider { position: absolute; inset: 0; }
-.slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 2s ease-in-out; }
-.slide.active { opacity: 1; }
-.overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2)); z-index: 1; }
-
-.red-nav {
-    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
-    width: min(100%, 1024px); height: 80px; background: #8b0000;
-    border-radius: 60px 60px 0 0; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    z-index: 20; transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-    display: flex; align-items: center; justify-content: center;
-}
-.red-nav.morph {
-    position: fixed; top: 40px; border-radius: 0 0 60px 60px; z-index: 25;
-}
-
-/* Hero Content Styling */
-.hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 10;
-    max-width: 920px;
-    padding: 0 24px;
-}
-
-.pill {
-    display: inline-block;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 999px;
-    padding: 7px 10px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(10px);
-    font-weight: 600;
-    font-size: 11px;
-    color: #fff;
-    margin-bottom: 12px;
-}
-
-.hero-title {
-    font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    font-weight: 700;
-    font-size: clamp(28px, 4vw, 42px);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    margin: 12px 0 6px;
-    color: #fff;
-}
-
-.hero-subtitle {
-    color: rgba(255,255,255,0.8);
-    font-weight: 400;
-    font-size: clamp(15px, 1.8vw, 18px);
-    max-width: 68ch;
-    margin: 0 auto 24px;
-    line-height: 1.6;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 8px;
-}
-
+.section { padding: 64px 0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .btn {
     display: inline-flex;
     align-items: center;
@@ -113,40 +94,33 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     transition: all 0.25s;
     border: 2px solid transparent;
     text-decoration: none;
-    backdrop-filter: blur(10px);
 }
-
 .btn.primary {
-    background: #E30613;
-    color: #fff;
-    border-color: #E30613;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
 }
-
 .btn.primary:hover {
-    background: #C30010;
-    box-shadow: 0 10px 22px rgba(227,6,19,0.25);
+    opacity: 0.9;
+    box-shadow: 0 10px 22px hsla(var(--primary), 0.25);
     transform: translateY(-2px);
 }
-
 .btn.outline {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border-color: rgba(255,255,255,0.3);
+    background: transparent;
+    color: hsl(var(--primary));
+    border-color: hsl(var(--primary));
 }
-
 .btn.outline:hover {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,255,255,0.5);
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
     transform: translateY(-2px);
 }
+
 
 /* Calculator Styling */
-.section { padding: 64px 0; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
 .go-calc {
-    background: #F7F7F8;
-    border-top: 1px solid #E0E0E0;
+    background: hsl(var(--muted));
+    border-top: 1px solid hsl(var(--border));
 }
 
 .go-calc__wrap {
@@ -156,10 +130,10 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
 }
 
 .go-calc__card {
-    background: #fff;
-    border: 1px solid #E0E0E0;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
     border-radius: 14px;
-    box-shadow: 0 8px 26px rgba(0,0,0,0.10);
+    box-shadow: 0 8px 26px rgba(0,0,0,0.07);
     padding: 20px;
 }
 
@@ -167,11 +141,11 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     font-size: 24px;
     margin: 0 0 6px;
-    color: #333333;
+    color: hsl(var(--card-foreground));
 }
 
 .go-calc__muted {
-    color: #666666;
+    color: hsl(var(--muted-foreground));
     margin: 0 0 16px;
 }
 
@@ -182,7 +156,7 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
 }
 
 .go-calc__pill {
-    border: 1px solid #E0E0E0;
+    border: 1px solid hsl(var(--border));
     border-radius: 999px;
     padding: 10px 14px;
     text-align: center;
@@ -190,14 +164,14 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     font-weight: 600;
     transition: all 0.3s;
     user-select: none;
-    background: #fff;
-    color: #333333;
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
 }
 
 .go-calc__pill[aria-pressed="true"] {
-    background: #E30613;
-    color: #fff;
-    border-color: #E30613;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
 }
 
 .go-calc__row {
@@ -212,32 +186,32 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     font-weight: 600;
     margin: 8px 0 6px;
     font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color: #333333;
+    color: hsl(var(--card-foreground));
 }
 
 .go-calc input {
     width: 100%;
-    border: 1px solid #E0E0E0;
+    border: 1px solid hsl(var(--input));
     border-radius: 10px;
     padding: 12px 14px;
     font: 16px/1.4 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     transition: border 0.2s, box-shadow 0.2s;
-    background: #fff;
-    color: #333333;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
 }
 
 .go-calc input:focus {
     outline: none;
-    border-color: #E30613;
-    box-shadow: 0 0 0 3px rgba(227,6,19,0.12);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsla(var(--primary), 0.12);
 }
 
 .go-calc input[type="range"] {
-    accent-color: #E30613;
+    accent-color: hsl(var(--primary));
 }
 
 .help {
-    color: #666666;
+    color: hsl(var(--muted-foreground));
     font-size: 13px;
     margin-top: 4px;
 }
@@ -257,8 +231,8 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
 }
 
 .go-calc__plan-card {
-    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
-    border: 2px solid #E0E0E0;
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--border));
     border-radius: 16px;
     padding: 20px;
     text-align: center;
@@ -267,13 +241,10 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     overflow: hidden;
 }
 
-
-
 .go-calc__plan-card--best {
-    border-color: #E30613;
-    background: linear-gradient(135deg, #fff 0%, #fef7f7 100%);
+    border-color: hsl(var(--primary));
     transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(227,6,19,0.2);
+    box-shadow: 0 8px 25px hsla(var(--primary), 0.2);
 }
 
 .go-calc__plan-badge {
@@ -281,7 +252,7 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     top: -1px;
     left: 50%;
     transform: translateX(-50%);
-    background: #E30613;
+    background: hsl(var(--primary));
     color: white;
     padding: 4px 12px;
     border-radius: 0 0 8px 8px;
@@ -294,25 +265,25 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     font-size: 18px;
     font-weight: 600;
-    color: #333333;
+    color: hsl(var(--card-foreground));
     margin-bottom: 8px;
 }
 
 .go-calc__plan-price {
     font: 700 24px 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color: #E30613;
+    color: hsl(var(--primary));
     margin-bottom: 4px;
 }
 
 .go-calc__plan-monthly {
     font-size: 12px;
-    color: #666666;
+    color: hsl(var(--muted-foreground));
     margin-bottom: 12px;
 }
 
 .go-calc__plan-details {
     font-size: 11px;
-    color: #888888;
+    color: hsl(var(--muted-foreground));
     line-height: 1.4;
 }
 
@@ -337,64 +308,8 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     margin-bottom: 16px;
 }
 
-.go-calc__result-card {
-    background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
-    border: 1px solid #E0E0E0;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.go-calc__result-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(227,6,19,0.15);
-    border-color: #E30613;
-}
-
-.go-calc__result-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #E30613, #C30010);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.go-calc__result-card:hover::before {
-    transform: scaleX(1);
-}
-
-.go-calc__monthly,
-.go-calc__fixed,
-.go-calc__variable {
-    font-size: 12px;
-    color: #666666;
-    margin-top: 4px;
-    font-weight: 500;
-}
-
-.go-calc__summary {
-    background: #F7F7F8;
-    border-radius: 10px;
-    padding: 16px;
-    margin-top: 16px;
-}
-
-@media (max-width: 768px) {
-    .go-calc__cards {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-}
-
 .go-calc__stat {
-    border: 1px dashed #E0E0E0;
+    border: 1px dashed hsl(var(--border));
     border-radius: 14px;
     padding: 14px;
     text-align: center;
@@ -402,14 +317,14 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
 
 .go-calc__stat small {
     display: block;
-    color: #666666;
+    color: hsl(var(--muted-foreground));
     font-size: 12px;
     margin-bottom: 4px;
 }
 
 .go-calc__big {
     font: 700 28px 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color: #333333;
+    color: hsl(var(--card-foreground));
 }
 
 .note {
@@ -422,7 +337,7 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
 .note.info { color: #0066CC; }
 
 .muted {
-    color: #666666;
+    color: hsl(var(--muted-foreground));
     font-size: 14px;
     margin-top: 8px;
 }
@@ -436,6 +351,13 @@ header { position: fixed; top: 0; left: 0; width: 100%; height: 40px; background
     }
 }
 
-
-
-.content { height: 2000px; background: linear-gradient(#111, #222, #333); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #bbb; }
+.content { 
+    height: 2000px; 
+    padding-top: 40px; /* Account for fixed header */
+    background: hsl(var(--background));
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 2rem; 
+    color: hsl(var(--foreground));
+}
