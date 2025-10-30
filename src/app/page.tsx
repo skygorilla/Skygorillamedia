@@ -17,23 +17,11 @@ export default function Home() {
               <h2 id="calc-title" className="go-calc__title">Kalkulator — Mini / Standard / Prošireni</h2>
               <p className="go-calc__muted">Unesi očekivani broj isporuka godišnje i odaberi paket. Cijene su okvirne (partnerske).</p>
 
-              <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
+              <div className="go-calc__plan" role="group" aria-label="Odabir paketa" style={{ display: 'none' }}>
                   <button className="go-calc__pill" data-plan="mini" aria-pressed="true">Mini</button>
                   <button className="go-calc__pill" data-plan="standard" aria-pressed="false">Standard</button>
                   <button className="go-calc__pill" data-plan="prosireni" aria-pressed="false">Prošireni</button>
               </div>
-
-              <div className="go-calc__row mt-4">
-                <div className="go-calc__stat go-calc__stat--input">
-                  <small>Godišnja pretplata (€)</small>
-                  <input id="go-sub-fee" type="number" defaultValue="900" inputMode="numeric" className="go-calc__big-input" />
-                </div>
-                <div className="go-calc__stat go-calc__stat--input">
-                  <small>Ad-hoc (€/isporuka)</small>
-                  <input id="go-adhoc" type="number" defaultValue="220" inputMode="numeric" className="go-calc__big-input" />
-                </div>
-              </div>
-              
 
               <div className="mt-4">
                   <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje</label>
@@ -47,9 +35,20 @@ export default function Home() {
                     <span id="go-sub-range">Mini 600–900</span> | Marginalne stope: <span id="go-per-range">1–20: 150 • 21–30: 100 • 31+: 70</span>
                   </div>
               </div>
+
+              <div className="go-calc__row mt-6">
+                <div className="go-calc__stat go-calc__stat--input">
+                  <small>Godišnja pretplata (€)</small>
+                  <input id="go-sub-fee" type="number" defaultValue="900" inputMode="numeric" className="go-calc__big-input" />
+                </div>
+                <div className="go-calc__stat go-calc__stat--input">
+                  <small>Ad-hoc (€/isporuka)</small>
+                  <input id="go-adhoc" type="number" defaultValue="220" inputMode="numeric" className="go-calc__big-input" />
+                </div>
+              </div>
               
               <div className="go-calc__cta">
-                <button className="btn primary" id="go-suggest">Predloži isplativiji paket</button>
+                <button className="btn primary" id="go-suggest">Primjeni preporučeni paket</button>
                 <button className="btn outline" id="go-reset" type="button">Reset</button>
               </div>
 

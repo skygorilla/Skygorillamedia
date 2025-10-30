@@ -246,42 +246,50 @@ export default function Calculator() {
     }
 
     function compute() {
-      const ev = parseInt(events?.value || '0', 10);
-      const result = calc(ev, 220);
-      const selectedPkg = result.packages[active as keyof typeof result.packages];
+      if (!events || !subFee) return;
+      const ev = parseInt(events.value || '0', 10);
+      
+      // Auto select plan based on slider value
+      const bestPlan = autoSelectPlanByThreshold(ev);
+      if (active !== bestPlan) {
+        active = bestPlan;
+        planPills.forEach(b => b.setAttribute('aria-pressed', (b as HTMLElement).dataset.plan === active ? 'true' : 'false'));
+      }
+      
+      const pkg = packages[active as keyof typeof packages];
+      const clampedSub = clamp(parseInt(subFee.value || '0', 10), pkg.sub);
+      subFee.value = String(clampedSub);
 
-      if (subFee) subFee.value = String(selectedPkg.sub_fee);
-      if (perPrice) perPrice.value = String(selectedPkg.effective_rate);
+      const result = calc(ev, parseInt(adhoc.value || '220', 10));
+      const selectedPkgResult = result.packages[active as keyof typeof result.packages];
+      
+      const totalAnnual = clampedSub + selectedPkgResult.var_cost;
+
       if (eventsOut) eventsOut.textContent = String(ev);
       
-      if (yearOut) tween(yearOut, selectedPkg.total);
-      if (monthOut) tween(monthOut, selectedPkg.monthly);
-      if (subOut) tween(subOut, selectedPkg.sub_fee);
-      if (varOut) tween(varOut, selectedPkg.var_cost);
+      if (yearOut) tween(yearOut, totalAnnual);
+      if (monthOut) tween(monthOut, Math.round(totalAnnual / 12));
+      if (subOut) tween(subOut, clampedSub);
+      if (varOut) tween(varOut, selectedPkgResult.var_cost);
 
-      const msg = selectedPkg.saving_vs_adhoc > 0 ? `Ušteda približno ${hr.format(selectedPkg.saving_vs_adhoc)} EUR godišnje.` : `Ad-hoc povoljniji za ${hr.format(Math.abs(selectedPkg.saving_vs_adhoc))} EUR.`;
+      const adhocTotal = ev * parseInt(adhoc.value || '220', 10);
+      const saving = adhocTotal - totalAnnual;
+      const msg = saving > 0 ? `Ušteda približno ${hr.format(saving)} EUR godišnje.` : `Ad-hoc povoljniji za ${hr.format(Math.abs(saving))} EUR.`;
       if (savings) {
         savings.textContent = msg;
-        savings.className = 'note ' + (selectedPkg.saving_vs_adhoc > 0 ? 'ok' : 'warn');
+        savings.className = 'note ' + (saving > 0 ? 'ok' : 'warn');
       }
       
-      const recoEl = document.getElementById('go-reco');
-      if (recoEl) {
-        recoEl.innerHTML = `Preporuka: <strong>${result.recommended.name}</strong> (ušteda ≈ <strong>${hr.format(result.recommended.saving_vs_second_best)}</strong> EUR/god u odnosu na sljedeću opciju).`;
-      }
-
       updateRecommendation(ev);
       renderComparison(ev);
       updateBottomCards(ev);
+      applyRanges();
     }
 
     // Event listeners
     planPills.forEach(btn => btn.addEventListener('click', () => {
-      planPills.forEach(b => b.setAttribute('aria-pressed', 'false'));
-      btn.setAttribute('aria-pressed', 'true');
       active = (btn as HTMLElement).dataset.plan || 'mini';
       
-      // Move slider to plan's optimal position
       const planPositions = { mini: 12, standard: 25, prosireni: 35 };
       const newPosition = planPositions[active as keyof typeof planPositions] || 12;
       if (events) {
@@ -289,7 +297,6 @@ export default function Calculator() {
         if (eventsOut) eventsOut.textContent = String(newPosition);
       }
       
-      applyRanges();
       compute();
     }));
 
@@ -302,14 +309,21 @@ export default function Calculator() {
       });
     }
     
-    subFee?.addEventListener('input', compute);
+    [subFee, adhoc].forEach(el => {
+      if (el) el.addEventListener('input', compute);
+    });
+
 
     suggest?.addEventListener('click', (e) => {
       e.preventDefault();
-      const ev = parseInt(events?.value || '0', 10);
+      if (!events) return;
+      const ev = parseInt(events.value || '0', 10);
       const best = costsFor(ev)[0];
-      const targetPill = document.querySelector(`.go-calc__pill[data-plan="${best.plan}"]`) as HTMLElement;
-      targetPill?.click();
+      
+      active = best.plan;
+      planPills.forEach(b => b.setAttribute('aria-pressed', (b as HTMLElement).dataset.plan === active ? 'true' : 'false'));
+
+      compute();
     });
 
     resetBtn?.addEventListener('click', () => {
@@ -317,15 +331,12 @@ export default function Calculator() {
       planPills.forEach(b => b.setAttribute('aria-pressed', (b as HTMLElement).dataset.plan === 'mini' ? 'true' : 'false'));
       if (events) events.value = '12';
       if (subFee) subFee.value = '900';
-      if (perPrice) perPrice.value = String(marginalUnitAt('mini', 12));
       if (adhoc) adhoc.value = '220';
       if (eventsOut) eventsOut.textContent = '12';
-      applyRanges();
       compute();
     });
 
     // Initialize
-    applyRanges();
     compute();
   }, []);
 
