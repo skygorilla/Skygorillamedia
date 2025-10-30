@@ -33,6 +33,7 @@ export default function Home() {
                   <input id="go-adhoc" type="number" defaultValue="220" inputMode="numeric" className="go-calc__big-input" />
                 </div>
               </div>
+              
 
               <div className="mt-4">
                   <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje</label>
