@@ -1,7 +1,9 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 
 const packages = {
   mini: { sub: 600, label: 'Mini', type: 'flat', rates: { flat: 150 }, description: "Osnovni paket za do 20 objava." },
@@ -10,24 +12,41 @@ const packages = {
 };
 
 type PlanResult = {
-  plan: string;
+  name: string;
   label: string;
-  sub: number;
-  description: string;
-  n: number;
   total: number;
-  monthly: number;
+  sub: number;
   variable: number;
+  monthly: number;
+  n: number;
 };
+
+const chartConfig = {
+  total: {
+    label: "Ukupni trošak",
+  },
+  mini: {
+    label: "Mini",
+    color: "hsl(var(--chart-2))",
+  },
+  standard: {
+    label: "Standard",
+    color: "hsl(var(--chart-2))",
+  },
+  prosireni: {
+    label: "Prošireni",
+    color: "hsl(var(--chart-2))",
+  },
+} satisfies ChartConfig;
+
 
 export default function Calculator() {
   const [events, setEvents] = useState(12);
   const [adhocPrice, setAdhocPrice] = useState(220);
-  const [rankedPlans, setRankedPlans] = useState<PlanResult[]>([]);
+  const [results, setResults] = useState<PlanResult[]>([]);
   const [recommendation, setRecommendation] = useState('');
-  const [savings, setSavings] = useState('');
 
-  const hr = new Intl.NumberFormat('hr-HR', { maximumFractionDigits: 0 });
+  const hr = new Intl.NumberFormat('hr-HR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
   const marginalVariableCost = (plan: string, n: number): number => {
     const pkg = packages[plan as keyof typeof packages];
@@ -38,9 +57,9 @@ export default function Calculator() {
     let left = n;
     let cost = 0;
     let prev = 0;
-    if (pkg.type === 'marginal' && pkg.rates) {
+    if (pkg.type === 'marginal' && Array.isArray(pkg.rates)) {
       for (const r of pkg.rates) {
-        if(left <= 0) break;
+        if (left <= 0) break;
         const bandCount = Math.max(0, Math.min(left, r.upto === Infinity ? left : r.upto - prev));
         cost += bandCount * r.price;
         left -= bandCount;
@@ -50,78 +69,66 @@ export default function Calculator() {
     return cost;
   }
 
-  const calculateCosts = (n: number): PlanResult[] => {
-    const order = ['mini', 'standard', 'prosireni'];
-    return order.map(p => {
-      const pkg = packages[p as keyof typeof packages];
-      const variable = marginalVariableCost(p, n);
+  const calculateAllCosts = (n: number): PlanResult[] => {
+    return Object.keys(packages).map(pKey => {
+      const pkg = packages[pKey as keyof typeof packages];
+      const variable = marginalVariableCost(pKey, n);
       const total = pkg.sub + variable;
       return {
-        plan: p,
+        name: pKey,
         label: pkg.label,
+        total: total,
         sub: pkg.sub,
-        description: pkg.description,
-        n,
-        total,
-        monthly: Math.round(total / 12),
         variable: variable,
+        monthly: Math.round(total / 12),
+        n: n,
       };
     });
   }
 
   useEffect(() => {
-    const allPlans = calculateCosts(events);
-    const sortedPlans = [...allPlans].sort((a, b) => a.total - b.total);
-    setRankedPlans(allPlans); // Keep original order for rendering
+    const allPlans = calculateAllCosts(events);
+    setResults(allPlans);
 
-    const bestPlan = sortedPlans[0];
-    const secondBest = sortedPlans[1];
+    if (events > 0) {
+      const sortedPlans = [...allPlans].sort((a, b) => a.total - b.total);
+      const bestPlan = sortedPlans[0];
+      const secondBest = sortedPlans[1];
 
-    if (bestPlan && secondBest) {
-      const savingVsSecond = secondBest.total - bestPlan.total;
-      if (savingVsSecond > 0) {
-        setRecommendation(`Za <strong>${events}</strong> isporuka, <strong>${bestPlan.label}</strong> paket je najisplativiji. Ušteda od ~<strong>${hr.format(savingVsSecond)}€</strong> godišnje u odnosu na sljedeću opciju.`);
-      } else {
-        setRecommendation(`Za <strong>${events}</strong> isporuka, paketi imaju sličnu isplativost.`);
+      if (bestPlan && secondBest) {
+        const savingVsSecond = secondBest.total - bestPlan.total;
+        if (savingVsSecond > 0) {
+          setRecommendation(`Za <strong>${events}</strong> isporuka, <strong>${bestPlan.label}</strong> paket je najisplativiji.`);
+        } else {
+          setRecommendation(`Za <strong>${events}</strong> isporuka, paketi imaju sličnu isplativost.`);
+        }
       }
-    }
-
-    const adhocTotal = events * adhocPrice;
-    const savingVsAdhoc = adhocTotal - (bestPlan?.total || 0);
-
-    if (savingVsAdhoc > 0) {
-      setSavings(`Ušteda od <strong>${hr.format(savingVsAdhoc)} EUR</strong> godišnje u usporedbi s ad-hoc cijenom.`);
     } else {
-      setSavings(`Ad-hoc je isplativiji za <strong>${hr.format(Math.abs(savingVsAdhoc))} EUR</strong>.`);
+      setRecommendation("Pomaknite klizač za izračun.");
     }
-
   }, [events, adhocPrice]);
-
-
-  const bestPlanName = rankedPlans.length > 0 ? [...rankedPlans].sort((a,b) => a.total - b.total)[0].plan : '';
+  
+  const chartData = useMemo(() => {
+    if (!results.length) return [];
+    
+    const bestPlanName = events > 0 ? results.sort((a,b) => a.total - b.total)[0].name : '';
+    
+    return results.map(plan => ({
+      name: plan.label,
+      total: plan.total,
+      fill: plan.name === bestPlanName ? 'hsl(var(--primary))' : 'hsl(var(--chart-2))'
+    }));
+  }, [results, events]);
 
   return (
     <section className="section go-calc" id="go-calculator" aria-labelledby="calc-title">
-      <div className="container">
-        <div className="go-calc__card">
-          <div className="md:flex md:items-start md:justify-between mb-6">
-            <div>
-              <h2 id="calc-title" className="go-calc__title">Kalkulator — Mini / Standard / Prošireni</h2>
-              <p className="go-calc__muted">Pomaknite klizač kako biste pronašli najisplativiji paket za vaše potrebe.</p>
-            </div>
-             <div className="go-calc__stat go-calc__stat--input mt-4 md:mt-0">
-              <small>Ad-hoc (€/isporuka)</small>
-              <input 
-                id="go-adhoc" 
-                type="number" 
-                value={adhocPrice} 
-                onChange={(e) => setAdhocPrice(parseInt(e.target.value, 10) || 0)}
-                inputMode="numeric" 
-                className="go-calc__big-input" />
-            </div>
-          </div>
+      <div className="container go-calc__wrap">
+        {/* Left Panel: Controls */}
+        <div className="flex flex-col">
+           <h2 id="calc-title" className="go-calc__title">Kalkulator troškova</h2>
+           <p className="go-calc__muted mb-6">Pronađite najisplativiji paket za vaše potrebe.</p>
           
-          <div className="mb-8">
+           <div className="mb-8 flex-grow">
               <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje: <span className="text-primary font-bold text-lg ml-2">{events}</span></label>
               <input 
                 id="go-events" 
@@ -134,25 +141,59 @@ export default function Calculator() {
               />
           </div>
 
-          {recommendation && <div className="muted mb-6 text-center" dangerouslySetInnerHTML={{ __html: recommendation }}></div>}
-
-
-          <div id="go-plan-container" className="go-calc__plan-cards">
-            {rankedPlans.map((plan) => (
-                <div key={plan.plan} className={`go-calc__plan-card ${plan.plan === bestPlanName ? 'go-calc__plan-card--best' : ''}`}>
-                  {plan.plan === bestPlanName && <div className="go-calc__plan-badge">Preporučeno</div>}
-                  <div className="go-calc__plan-header">{plan.label}</div>
-                  <div className="go-calc__plan-price">{hr.format(plan.total)} EUR</div>
-                  <div className="go-calc__plan-monthly">{hr.format(plan.monthly)} EUR/mj</div>
-                  <div className="go-calc__plan-details">
-                    <div>Pretplata: {hr.format(plan.sub)} EUR</div>
-                    <div>{plan.description}</div>
-                  </div>
-                </div>
-            ))}
+          <div className="go-calc__stat go-calc__stat--input mt-4 md:mt-0">
+              <small>Usporedna ad-hoc cijena (€/isporuka)</small>
+              <input 
+                id="go-adhoc" 
+                type="number" 
+                value={adhocPrice} 
+                onChange={(e) => setAdhocPrice(parseInt(e.target.value, 10) || 0)}
+                inputMode="numeric" 
+                className="go-calc__big-input" 
+              />
           </div>
+          
+          {recommendation && <div className="muted mt-6 text-center text-base" dangerouslySetInnerHTML={{ __html: recommendation }}></div>}
+        </div>
 
-          {savings && <p className="note mt-6 text-center" dangerouslySetInnerHTML={{ __html: savings }}></p>}
+        {/* Right Panel: Chart */}
+        <div className="go-calc__card -mt-4 md:mt-0">
+          <h3 className="text-lg font-semibold mb-1">Godišnji trošak po paketima</h3>
+          <p className="text-sm text-muted-foreground mb-4">Usporedba ukupnih troškova za {events} isporuka.</p>
+          <ChartContainer config={chartConfig} className="min-h-[250px] w-full">
+            <ResponsiveContainer width="100%" height={250}>
+                <BarChart accessibilityLayer data={chartData} margin={{ top: 20, right: 20, left: -10, bottom: 5 }}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                   <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${hr.format(value as number)}`}
+                   />
+                  <Tooltip
+                    cursor={false}
+                    content={<ChartTooltipContent
+                        formatter={(value, name) => (
+                            <div className="flex flex-col">
+                                <span className="font-bold">{name}</span>
+                                <span className='text-primary font-semibold'>{hr.format(value as number)}</span>
+                            </div>
+                        )}
+                        indicator='dot'
+                    />}
+                  />
+                  <Bar dataKey="total" radius={4} />
+                </BarChart>
+            </ResponsiveContainer>
+          </ChartContainer>
         </div>
       </div>
     </section>
