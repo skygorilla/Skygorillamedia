@@ -293,7 +293,15 @@ export default function Calculator() {
       compute();
     }));
 
-    events?.addEventListener('input', compute);
+    if (events) {
+      events.addEventListener('input', () => {
+        if(eventsOut) {
+          eventsOut.textContent = events.value;
+        }
+        compute();
+      });
+    }
+    
     subFee?.addEventListener('input', compute);
 
     suggest?.addEventListener('click', (e) => {
@@ -323,5 +331,3 @@ export default function Calculator() {
 
   return null; // This component only adds functionality
 }
-
-    

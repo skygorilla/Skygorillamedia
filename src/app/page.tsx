@@ -16,22 +16,28 @@ export default function Home() {
               <h2 id="calc-title" className="go-calc__title">Kalkulator — Mini / Standard / Prošireni</h2>
               <p className="go-calc__muted">Unesi očekivani broj isporuka godišnje i odaberi paket. Cijene su okvirne (partnerske).</p>
 
-              <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
-                <button className="go-calc__pill" data-plan="mini" aria-pressed="true">Mini</button>
-                <button className="go-calc__pill" data-plan="standard" aria-pressed="false">Standard</button>
-                <button className="go-calc__pill" data-plan="prosireni" aria-pressed="false">Prošireni</button>
+              <div className="go-calc__row items-end">
+                <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
+                  <button className="go-calc__pill" data-plan="mini" aria-pressed="true">Mini</button>
+                  <button className="go-calc__pill" data-plan="standard" aria-pressed="false">Standard</button>
+                  <button className="go-calc__pill" data-plan="prosireni" aria-pressed="false">Prošireni</button>
+                </div>
+                 <div>
+                  <label htmlFor="go-sub-fee">Godišnja pretplata (€)</label>
+                  <input id="go-sub-fee" type="number" defaultValue="900" inputMode="numeric" />
+                </div>
               </div>
 
-              <div className="go-calc__row">
+
+              <div className="go-calc__row mt-4 items-center">
                 <div>
                   <label htmlFor="go-events">Broj isporuka godišnje</label>
                   <input id="go-events" type="range" min="0" max="60" step="1" defaultValue="12" aria-describedby="go-events-help" />
-                  <div className="help" id="go-events-help"><span id="go-events-out">12</span> isporuka / godinu</div>
+                  <div className="help" id="go-events-help"><span id="go-sub-range">Mini 600–900</span></div>
                 </div>
-                <div>
-                  <label htmlFor="go-sub-fee">Godišnja pretplata (€)</label>
-                  <input id="go-sub-fee" type="number" defaultValue="900" inputMode="numeric" />
-                  <div className="help">Raspon po paketu: <span id="go-sub-range">Mini 600–900</span></div>
+                <div className="text-center">
+                    <div id="go-events-out" className="text-5xl font-bold text-primary">12</div>
+                    <div className="text-sm text-muted-foreground">isporuka</div>
                 </div>
               </div>
 
