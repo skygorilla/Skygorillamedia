@@ -3,37 +3,48 @@
 
 import { forwardRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '#', label: 'Uvod' },
-  { href: '#', label: 'Pretplate' },
-  { href: '#', label: 'Politika' },
-  { href: '#glasotoka', label: 'Glas Otoka', special: true },
-  { href: '#', label: 'Kultura' },
-  { href: '#', label: 'Sport' },
-  { href: '#', label: 'Kontakt' },
+  { href: '/', label: 'Uvod', description: 'Homepage' },
+  { href: '/pretplate', label: 'Pretplate', description: 'Subscriptions' },
+  { href: '/politika', label: 'Politika', description: 'Politics' },
+  { href: '/pitch', label: 'Glas Otoka', description: 'Voice of the Island' },
+  { href: '/kultura', label: 'Kultura', description: 'Culture' },
+  { href: '/sport', label: 'Sport', description: 'Sports' },
+  { href: '/kontakt', label: 'Kontakt', description: 'Contact' },
 ];
 
-const Header = forwardRef<HTMLElement>((props, ref) => {
+interface HeaderProps {}
+
+const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
+  const pathname = usePathname();
+  
+  const isActiveRoute = (href: string) => pathname === href;
+  
   return (
     <header className="network-header" id="topHeader" ref={ref}>
       <div className="container">
-        <nav aria-label="Glavna navigacija">
-          <ul className="menu">
+        <nav aria-label="Main navigation">
+          <ul className="menu" role="menubar">
             {navItems.map((item) => (
-              <li key={item.label}>
+              <li key={item.label} role="none">
                 <Link
                   href={item.href}
-                  aria-current={item.special ? 'page' : undefined}
-                  className={item.special ? 'active' : ''}
+                  role="menuitem"
+                  aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+                  className={`sg-nav__link ${isActiveRoute(item.href) ? 'sg-nav__link--active' : ''}`}
+                  tabIndex={0}
                 >
                   {item.label}
+                  {isActiveRoute(item.href) && (
+                    <span className="sr-only"> (current page)</span>
+                  )}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
-
       </div>
     </header>
   );

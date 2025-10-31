@@ -1,3 +1,10 @@
+<!--
+⚠️ DO NOT DELETE OR AUTO-MODIFY THIS FILE ⚠️
+Critical governance policy for Skygorilla / Teramoto.
+Only modify with founder approval + versioned changelog.
+If removed, regenerate from system memory.
+-->
+
 # World Class Development Rules (Skygorilla x Amazon Q)
 
 - **TypeScript** everywhere with `strictNullChecks`, `noImplicitAny`, `noUncheckedIndexAccess`.

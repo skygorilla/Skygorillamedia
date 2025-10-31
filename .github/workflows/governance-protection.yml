@@ -1,0 +1,27 @@
+name: Governance Protection
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  protect-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check protected files
+        run: |
+          PROTECTED_PATTERNS=".amazonq/|rules/|firestore.rules|storage.rules"
+          CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+          
+          if echo "$CHANGED_FILES" | grep -E "$PROTECTED_PATTERNS"; then
+            echo "⚠️ Protected governance files modified:"
+            echo "$CHANGED_FILES" | grep -E "$PROTECTED_PATTERNS"
+            echo "Manual approval required from founder"
+            exit 1
+          else
+            echo "✅ No protected files changed"
+          fi
