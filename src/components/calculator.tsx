@@ -14,7 +14,6 @@ export default function Calculator() {
     const varOut = document.getElementById('go-var');
     const savings = document.getElementById('go-savings');
     const planPills = document.querySelectorAll('.go-calc__pill');
-    const suggest = document.getElementById('go-suggest');
     const resetBtn = document.getElementById('go-reset');
     const otokPlusCard = document.querySelector('[data-plan-card="otokplus"]');
 
@@ -271,5 +270,3 @@ export default function Calculator() {
     </section>
   );
 }
-
-    
