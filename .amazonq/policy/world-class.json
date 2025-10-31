@@ -1,0 +1,26 @@
+{
+  "name": "skygorilla-world-class",
+  "version": "1.0.0",
+  "rules": [
+    { "id": "ts.strict", "level": "error",
+      "checks": ["strictNullChecks", "noImplicitAny", "noUncheckedIndexAccess"] },
+    { "id": "aws.iamLeastPrivilege", "level": "error",
+      "checks": ["noWildcardActions", "scopedResources", "separateExecutionRole"] },
+    { "id": "sec.secrets", "level": "error",
+      "checks": ["useSecretsManagerOrSSM", "noHardcodedSecrets"] },
+    { "id": "sec.xss", "level": "error",
+      "checks": ["sanitizeInputs", "escapeOutputs", "noUnsafeHtmlSinks"] },
+    { "id": "resilience", "level": "warn",
+      "checks": ["idempotency", "exponentialRetry", "dlqOrOnFailure"] },
+    { "id": "logs.metrics", "level": "warn",
+      "checks": ["jsonLogs", "correlationId", "cloudwatchAlarms"] },
+    { "id": "design.tokens", "level": "error",
+      "checks": ["--space-", "--shadow-", "--duration-", "--bp-"] },
+    { "id": "design.bem", "level": "warn",
+      "checks": ["bemRegex"] },
+    { "id": "a11y.seo", "level": "warn",
+      "checks": ["contrast45", "focusVisible", "ariaRoles", "seoMeta"] },
+    { "id": "ux.states", "level": "warn",
+      "checks": ["loading", "empty", "errorBoundaries"] }
+  ]
+}
