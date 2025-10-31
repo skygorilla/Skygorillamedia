@@ -26,7 +26,7 @@ export default function Calculator() {
 
     let active = 'mini';
 
-    function tween(node: HTMLElement, to: number) {
+    function tween(node: HTMLElement | null, to: number) {
       if (!node) return;
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduce) {
@@ -52,8 +52,7 @@ export default function Calculator() {
         if (n <= 10) return 'mini';
         if (n <= 40) return 'standard';
         if (n <= 80) return 'partner';
-        if (n <= 120) return 'otokplus';
-        return 'otokplus'; // Cap at Otok+
+        return 'otokplus';
     }
 
     function calculateCosts(planKey: string, n: number) {
@@ -79,8 +78,8 @@ export default function Calculator() {
                 const totalEl = cardEl.querySelector('[data-total]');
                 const monthlyEl = cardEl.querySelector('[data-monthly]');
                 
-                if (totalEl) tween(totalEl as HTMLElement, costs.total);
-                if (monthlyEl) tween(monthlyEl as HTMLElement, costs.monthly);
+                tween(totalEl as HTMLElement, costs.total);
+                tween(monthlyEl as HTMLElement, costs.monthly);
 
                 if (planKey === recommendedPlan) {
                     cardEl.classList.add('go-calc__plan-card--best');
@@ -99,33 +98,36 @@ export default function Calculator() {
 
 
     function compute() {
-      if (!events) return;
+      if (!events || !eventsOut || !yearOut || !monthOut || !subOut || !varOut || !savings) return;
+
       const ev = parseInt(events.value || '0', 10);
       const currentPlanKey = getPlanByVolume(ev);
       active = currentPlanKey;
 
       const costs = calculateCosts(currentPlanKey, ev);
       
-      if (eventsOut) eventsOut.textContent = String(ev);
-      if (yearOut) tween(yearOut, costs.total);
-      if (monthOut) tween(monthOut, costs.monthly);
-      if (subOut) tween(subOut, costs.sub);
-      if (varOut) tween(varOut, costs.variable);
+      eventsOut.textContent = String(ev);
+      tween(yearOut, costs.total);
+      tween(monthOut, costs.monthly);
+      tween(subOut, costs.sub);
+      tween(varOut, costs.variable);
       
       planPills.forEach(b => b.setAttribute('aria-pressed', (b as HTMLElement).dataset.plan === active ? 'true' : 'false'));
 
       const adhocTotal = ev * parseInt(adhoc?.value || '250', 10);
       const saving = adhocTotal - costs.total;
       const msg = saving > 0 ? `Ušteda približno ${hr.format(saving)} EUR godišnje u odnosu na ad-hoc.` : `Ad-hoc je isplativiji za ovaj volumen.`;
-      if (savings) {
-        savings.textContent = msg;
-        savings.className = 'note ' + (saving > 0 ? 'ok' : 'warn');
-      }
+      
+      savings.textContent = msg;
+      savings.className = 'note ' + (saving > 0 ? 'ok' : 'warn');
 
-      if(ev > 120) {
-        (document.getElementById('go-reco') as HTMLElement).innerHTML = `Za više od 120 događaja, <a href="#kontakt" class="font-bold">kontaktirajte nas</a> za prilagođenu ponudu.`;
-      } else {
-         (document.getElementById('go-reco') as HTMLElement).innerHTML = `Preporučeni paket za ${ev} isporuka je <strong>${packages[active as keyof typeof packages].label}</strong>.`;
+      const recoEl = document.getElementById('go-reco');
+      if (recoEl) {
+          if(ev > 120) {
+            recoEl.innerHTML = `Za više od 120 događaja, <a href="#kontakt" class="font-bold">kontaktirajte nas</a> za prilagođenu ponudu.`;
+          } else {
+            recoEl.innerHTML = `Preporučeni paket za ${ev} isporuka je <strong>${packages[active as keyof typeof packages].label}</strong>.`;
+          }
       }
       
       updateCards(ev);
@@ -187,7 +189,7 @@ export default function Calculator() {
               <div className="go-calc__row items-center">
                 <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" aria-describedby="go-events-help" className='w-full' />
                 <div className="go-calc__stat text-center">
-                    <div id="go-events-out" className="text-5xl font-bold text-primary">12</div>
+                    <div id="go-events-out" className="text-5xl font-bold text-primary-DEFAULT">12</div>
                 </div>
               </div>
           </div>
@@ -270,3 +272,5 @@ export default function Calculator() {
     </section>
   );
 }
+
+    

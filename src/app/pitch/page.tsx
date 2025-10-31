@@ -1,56 +1,17 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/layout/header';
 
-const Calculator = dynamic(() => import('@/components/calculator'), { 
-  ssr: false,
-  loading: () => (
-    <div className="skeleton-calc">
-      <div className="skeleton-calc-grid">
-        <div className="skeleton-calc-card">
-          <div className="skeleton-box skeleton-title"></div>
-          <div className="skeleton-box skeleton-text"></div>
-          <div className="skeleton-box skeleton-input"></div>
-          <div className="skeleton-box skeleton-input"></div>
-          <div className="skeleton-box skeleton-button"></div>
-        </div>
-        <div className="skeleton-calc-card">
-          <div className="skeleton-box skeleton-title"></div>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px'}}>
-            <div className="skeleton-box skeleton-stat"></div>
-            <div className="skeleton-box skeleton-stat"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-});
-const HeroSection = dynamic(() => import('@/components/hero-section'), { 
-  ssr: false,
-  loading: () => (
-    <div className="skeleton-hero">
-      <div style={{textAlign: 'center', maxWidth: '920px', padding: '0 24px'}}>
-        <div className="skeleton-box" style={{height: '20px', width: '200px', margin: '0 auto 12px', borderRadius: '999px'}}></div>
-        <div className="skeleton-box" style={{height: '42px', width: '100%', margin: '12px auto', borderRadius: '8px'}}></div>
-        <div className="skeleton-box" style={{height: '16px', width: '80%', margin: '0 auto 24px', borderRadius: '8px'}}></div>
-      </div>
-    </div>
-  )
-});
+const Calculator = dynamic(() => import('@/components/calculator'), { ssr: false });
+const HeroSection = dynamic(() => import('@/components/hero-section'), { ssr: false });
 
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLElement>(null); 
-  const headerElementRef = (node: HTMLElement | null) => {
-    if (node) {
-      headerRef.current = node;
-    }
-  };
-
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,27 +22,26 @@ export default function Home() {
       
       if (!nav || !hero || !header) return;
 
-      // Ensure the morph happens smoothly
       const triggerY = hero.offsetTop + hero.offsetHeight - nav.offsetHeight - header.offsetHeight;
-      const HYSTERESIS = 24;
-      
       const isMorphed = nav.classList.contains('morph');
 
       if (!isMorphed && scrollY >= triggerY) {
         nav.classList.add('morph');
-      } else if (isMorphed && scrollY < triggerY - HYSTERESIS) {
+      } else if (isMorphed && scrollY < triggerY) {
         nav.classList.remove('morph');
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial check
-    handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+
+  const headerElementRef = (node: HTMLElement | null) => {
+    if (node) {
+      headerRef.current = node;
+    }
+  };
 
 
   return (
@@ -89,15 +49,11 @@ export default function Home() {
       <Header ref={headerElementRef} />
       <main>
         <HeroSection heroRef={heroRef} navRef={navRef} />
-        
-        <div className="connecting-line"></div>
-
         <Calculator />
-        
-        
-        <div className="content" style={{zIndex: 2, position: 'relative', background: 'white' }}></div>
+        <div className="content"></div>
       </main>
-
     </>
   );
 }
+
+    

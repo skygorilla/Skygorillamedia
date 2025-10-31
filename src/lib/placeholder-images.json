@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "A view of a coastal town with mountains in the background.",
+      "imageUrl": "https://images.unsplash.com/photo-1665521342898-28d3a30d6ea4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb2FzdCUyMGxhbmRzY2FwZXxlbnwwfHx8fDE3NjE4NzMzOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coast landscape"
+    },
+    {
+      "id": "hero-2",
+      "description": "A boat sailing on the sea near a rocky shore.",
+      "imageUrl": "https://images.unsplash.com/photo-1526761122248-c31c93f8b2b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzYWlsaW5nJTIwYm9hdHxlbnwwfHx8fDE3NjE4NDU2NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sailing boat"
+    },
+    {
+      "id": "hero-3",
+      "description": "An aerial view of a person kitesurfing on the ocean.",
+      "imageUrl": "https://images.unsplash.com/photo-1688904851329-c41d0a57f536?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxraXRlc3VyZmluZyUyMGFlcmlhbHxlbnwwfHx8fDE3NjE4NzMzOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "kitesurfing aerial"
+    }
+  ]
 }
