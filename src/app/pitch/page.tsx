@@ -94,36 +94,6 @@ export default function Home() {
 
         <Calculator />
         
-        {/* Partnerstvo i koristi */}
-        <section className="section" style={{background: '#f8f9fa', padding: '48px 0', zIndex: 2, position: 'relative'}}>
-          <div className="container">
-            <div className="partnership-card">
-              <h2 style={{textAlign: 'center', marginBottom: '32px', color: '#333', fontFamily: 'Montserrat, sans-serif'}}>Partnerstvo i koristi</h2>
-              <div className="partnership-table">
-                <div className="partnership-row partnership-header">
-                  <div>Tko se udruži</div>
-                  <div>Što dobije</div>
-                </div>
-                <div className="partnership-row">
-                  <div>Udruga + TZ</div>
-                  <div>pristup za male</div>
-                </div>
-                <div className="partnership-row">
-                  <div>TZ + Grad</div>
-                  <div>stabilna arhiva i kontinuitet</div>
-                </div>
-                <div className="partnership-row">
-                  <div>TZ + Grad + kulturne ustanove</div>
-                  <div>platforma kao javno dobro</div>
-                </div>
-                <div className="partnership-row">
-                  <div>TZ + Grad + škole + sport</div>
-                  <div><strong>Otok dobiva svoj kanal</strong></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
         
         <div className="content" style={{zIndex: 2, position: 'relative', background: 'white' }}></div>
       </main>
@@ -131,5 +101,3 @@ export default function Home() {
     </>
   );
 }
-
-    
