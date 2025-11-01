@@ -15,27 +15,40 @@ function ProfilePageContent() {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await auth.signOut();
-    router.push('/');
+    if (auth) {
+      await auth.signOut();
+      router.push('/');
+    }
   };
 
   if (isUserLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   if (userError) {
     return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Greška</AlertTitle>
-        <AlertDescription>{userError.message}</AlertDescription>
-      </Alert>
+      <div className="flex min-h-screen items-center justify-center">
+        <Alert variant="destructive" className="w-full max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Greška</AlertTitle>
+          <AlertDescription>{userError.message}</AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   if (!user) {
-    // This should ideally not be reached if AuthGuard is working correctly
-    return <p>Niste prijavljeni.</p>;
+    // This should ideally not be reached if AuthGuard is working correctly,
+    // but it's good practice to handle this case.
+    return (
+        <div className="flex min-h-screen items-center justify-center">
+            <p>Niste prijavljeni. Preusmjeravam...</p>
+        </div>
+    );
   }
 
   return (

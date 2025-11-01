@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,7 +13,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, useUser } from '@/firebase';
 import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
-import { useEffect } from 'react';
 
 const loginSchema = z.object({
   email: z.string().email('Neispravna email adresa'),
@@ -56,7 +55,16 @@ export default function LoginPage() {
 
   const onSubmit = (data: LoginForm) => {
     setLoading(true);
-    initiateEmailSignIn(auth, data.email, data.password);
+    if (auth) {
+      initiateEmailSignIn(auth, data.email, data.password);
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Greška',
+        description: 'Autentikacija nije dostupna.',
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,8 +98,8 @@ export default function LoginPage() {
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Prijava u tijeku...' : 'Prijavi se'}
+            <Button type="submit" className="w-full" disabled={loading || isUserLoading}>
+              {loading || isUserLoading ? 'Prijava u tijeku...' : 'Prijavi se'}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

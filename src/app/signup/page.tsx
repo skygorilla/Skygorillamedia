@@ -55,7 +55,16 @@ export default function SignupPage() {
 
   const onSubmit = (data: SignupForm) => {
     setLoading(true);
-    initiateEmailSignUp(auth, data.email, data.password);
+    if (auth) {
+      initiateEmailSignUp(auth, data.email, data.password);
+    } else {
+       toast({
+        variant: 'destructive',
+        title: 'Greška',
+        description: 'Autentikacija nije dostupna.',
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,8 +98,8 @@ export default function SignupPage() {
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Registracija u tijeku...' : 'Registriraj se'}
+            <Button type="submit" className="w-full" disabled={loading || isUserLoading}>
+              {loading || isUserLoading ? 'Registracija u tijeku...' : 'Registriraj se'}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
