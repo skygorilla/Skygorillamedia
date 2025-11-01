@@ -1,0 +1,12 @@
+name: UIUX Kernel Guard
+on: [push, pull_request]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block edits to UI/UX kernel without approval
+        run: |
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD || true)
+          echo "$CHANGED" | grep -E "^\.amazonq/rules/core/uiux/" && \
+            (echo "❌ UI/UX kernel change — manual approval required"; exit 1) || echo "✓ kernel intact"

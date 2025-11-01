@@ -31,7 +31,7 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-XSS-Protection', '1; mode=block');
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), autoplay=(), local-fonts=(), cross-origin-isolated=()');
   
   // Strict Transport Security for HTTPS
   if (request.nextUrl.protocol === 'https:') {
@@ -100,7 +100,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: process.env.NODE_ENV === 'development' ? [] : [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: [],
 };

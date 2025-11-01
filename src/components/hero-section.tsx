@@ -40,6 +40,7 @@ export default function HeroSection({ navRef, heroRef }: HeroSectionProps) {
       };
     } catch (error) {
       console.error('Hero slider initialization error:', error);
+      return;
     }
   }, [korculaImages.length]);
 

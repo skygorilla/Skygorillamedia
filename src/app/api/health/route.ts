@@ -3,18 +3,16 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   try {
     const health = {
-      status: 'healthy',
+      status: 'ok',
       timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || '0.1.0',
-      uptime: process.uptime(),
-      memory: process.memoryUsage(),
-      env: process.env.NODE_ENV
+      firebase: !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      recaptcha: !!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     };
     
-    return NextResponse.json(health, { status: 200 });
+    return NextResponse.json(health);
   } catch (error) {
     return NextResponse.json(
-      { status: 'unhealthy', error: 'Health check failed' },
+      { status: 'error', message: 'Health check failed' },
       { status: 500 }
     );
   }

@@ -1,0 +1,5 @@
+connectorId: glas-otoka-connector
+generate:
+  javascriptSdk:
+    outputDir: ../generated
+    package: "@glas-otoka/dataconnect"

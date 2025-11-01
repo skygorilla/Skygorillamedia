@@ -1,0 +1,22 @@
+[debug] [2025-11-01T18:13:24.957Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-11-01T18:13:37.458Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-11-01T18:13:37.461Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-01T18:13:37.488Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50001
+[debug] [2025-11-01T18:13:41.409Z] W1101 18:13:41.405744     289 build.go:56] Failed to construct deployment metadata: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W1101 18:13:41.405744     289 build.go:56] Failed to construct deployment metadata: rpc error: code = NotFound desc = no schema found for service \"glas-otoka-dataconnect\". No service has a schema.\n"}}
+[debug] [2025-11-01T18:13:41.412Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-11-01T18:13:41.414Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-11-01T18:13:41.414Z] Starting Data Connect Emulator with command {"binary":"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/user/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/user/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-11-01T18:13:41.995Z] I1101 18:13:41.496423     294 load.go:31] Reloading schema and connectors...
+E1101 18:13:41.513324     294 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
+E1101 18:13:41.513400     294 load.go:73] Could not load sources: 
+Errors: schema/schema.gql:2:6: Cannot redeclare type Query.
+I1101 18:13:41.524203     294 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] 
+I1101 18:13:41.526307     294 load.go:74] Finished reloading
+I1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1101 18:13:41.496423     294 load.go:31] Reloading schema and connectors...\nE1101 18:13:41.513324     294 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service \"glas-otoka-dataconnect\". No service has a schema.\nE1101 18:13:41.513400     294 load.go:73] Could not load sources: \nErrors: schema/schema.gql:2:6: Cannot redeclare type Query.\nI1101 18:13:41.524203     294 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] \nI1101 18:13:41.526307     294 load.go:74] Finished reloading\nI1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[error] [Firebase Plugin] error:  {}
+[error] [Firebase Plugin] requireAuth error: n.split is not a function

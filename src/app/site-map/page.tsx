@@ -27,6 +27,7 @@ const ecosystemSections = [
     color: 'bg-green-500',
     pages: [
       { name: 'DevTools Hub', path: '/devtools', description: 'Main development dashboard' },
+      { name: 'Config Diagnostics', path: '/devtools/config', description: 'Firebase, reCAPTCHA, Auth status' },
       { name: 'Console', path: '/devtools/console', description: 'Debug console and logs' },
       { name: 'Network Monitor', path: '/devtools/network', description: 'API calls and performance' },
       { name: 'Performance', path: '/devtools/performance', description: 'Core Web Vitals tracking' },

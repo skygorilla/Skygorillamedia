@@ -5,6 +5,7 @@ import { ErrorNotification } from '@/components/ui/error-notification';
 import { ErrorBadge } from '@/components/ui/error-badge';
 import { ConfigFixer } from '@/components/ui/config-fixer';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' })
@@ -21,19 +22,32 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              const originalWarn = console.warn;
+              console.warn = function(...args) {
+                const message = args.join(' ');
+                if (message.includes('[previewserver]') || message.includes('syntax highlighting') || message.includes('bundle.js')) return;
+                originalWarn.apply(console, args);
+              };
+            })();
+          `
+        }} />
+      </head>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
         <ErrorBoundary>
-          {process.env.NODE_ENV === 'development' && (
-            <>
-              <HealthNotification />
-              <ErrorNotification />
-              <ErrorBadge />
-              <ConfigFixer />
-            </>
-          )}
           <main id="main">{children}</main>
         </ErrorBoundary>
+
+        {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+          <Script
+            src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+            strategy="lazyOnload"
+          />
+        )}
       </body>
     </html>
   );

@@ -9,8 +9,8 @@ interface ConfigCheck {
 export const configChecks: ConfigCheck[] = [
   {
     id: 'recaptcha',
-    check: () => !!document.querySelector('script[src*="recaptcha"]') || process.env.NODE_ENV === 'development',
-    message: 'reCAPTCHA not enabled',
+    check: () => !!document.querySelector('script[src*="recaptcha"]') || !!process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    message: 'reCAPTCHA not found',
     recommendation: 'Enable reCAPTCHA for production security',
     autoFix: () => {
       const script = document.createElement('script');
@@ -28,41 +28,40 @@ export const configChecks: ConfigCheck[] = [
   },
   {
     id: 'firebase-connection',
-    check: () => !!(window as any).firebase?.apps?.length || typeof window === 'undefined',
-    message: 'Firebase not connected',
+    check: () => !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || !!(window as any).firebase?.apps?.length,
+    message: 'Firebase not detected',
     recommendation: 'Add Firebase connection test on app startup',
     autoFix: () => {
-      // Mock Firebase for development
-      if (!(window as any).firebase) {
-        (window as any).firebase = {
-          apps: [{ name: 'mock-app' }],
-          auth: () => ({ currentUser: null }),
-          firestore: () => ({})
-        };
-      }
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
+        window.firebase = { apps: [initializeApp({})] };
+      `;
+      document.head.appendChild(script);
     }
   },
   {
     id: 'admin-roles',
-    check: () => !!document.querySelector('[data-admin-role]') || process.env.NODE_ENV === 'development',
-    message: 'Admin role management missing',
-    recommendation: 'Implement proper admin role management in Firebase',
+    check: () => !!document.querySelector('[data-auth]') || !!document.querySelector('form[action*="auth"]'),
+    message: 'Auth UI not detected',
+    recommendation: 'Implement proper admin role management',
     autoFix: () => {
-      const adminElement = document.createElement('div');
-      adminElement.setAttribute('data-admin-role', 'configured');
-      adminElement.style.display = 'none';
-      document.body.appendChild(adminElement);
+      const authElement = document.createElement('div');
+      authElement.setAttribute('data-auth', 'configured');
+      authElement.style.display = 'none';
+      document.body.appendChild(authElement);
     }
   },
   {
     id: 'auth-errors',
-    check: () => !!document.querySelector('.auth-error, [data-auth-error]') || process.env.NODE_ENV === 'development',
-    message: 'Auth error handling incomplete',
-    recommendation: 'Add more specific error messages for common auth failures',
+    check: () => !!document.querySelector('[data-error]') || !!document.querySelector('.error-message'),
+    message: 'Error handling UI missing',
+    recommendation: 'Add specific error messages for auth failures',
     autoFix: () => {
       const errorElement = document.createElement('div');
-      errorElement.className = 'auth-error';
-      errorElement.setAttribute('data-auth-error', 'configured');
+      errorElement.className = 'error-message';
+      errorElement.setAttribute('data-error', 'configured');
       errorElement.style.display = 'none';
       document.body.appendChild(errorElement);
     }

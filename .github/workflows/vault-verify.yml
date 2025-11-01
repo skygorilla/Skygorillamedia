@@ -1,0 +1,11 @@
+name: Vault Integrity Check
+on: [push, pull_request]
+
+jobs:
+  verify-vault:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check vault integrity
+        run: .amazonq/vault/scripts/verify.sh

@@ -1,0 +1,4 @@
+# Minimal schema placeholder
+type Query {
+  _empty: String
+}

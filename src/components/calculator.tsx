@@ -175,129 +175,188 @@ export default function Calculator() {
   return (
     <section className="section go-calc" id="go-calculator" aria-labelledby="calc-title">
       <div className="container go-calc__wrap">
-        <div className="go-calc__card">
-          <div className="flex items-center gap-2 mb-2">
-            <CalcIcon className="h-6 w-6 text-primary" />
-            <h2 id="calc-title" className="go-calc__title">Kalkulator Pretplatničkih Modela</h2>
-          </div>
-          <p className="go-calc__muted">Unesite očekivani broj isporuka godišnje za automatsku preporuku paketa.</p>
-
-          <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
-              <button className="go-calc__pill" data-plan="mini" aria-pressed="true" type="button">Mini (1-10)</button>
-              <button className="go-calc__pill" data-plan="standard" aria-pressed="false" type="button">Standard (11-40)</button>
-              <button className="go-calc__pill" data-plan="partner" aria-pressed="false" type="button">Partner (41-80)</button>
+        <div className="go-calc__card go-calc__card--modern">
+          <div className="go-calc__header">
+            <div className="go-calc__icon">
+              <CalcIcon className="h-8 w-8" />
+            </div>
+            <div>
+              <h2 id="calc-title" className="go-calc__title">Kalkulator Pretplate</h2>
+              <p className="go-calc__subtitle">Pronađite idealnu pretplatu za vaše potrebe</p>
+            </div>
           </div>
 
-          <div className="go-calc__row mt-4">
-            <div className="go-calc__stat go-calc__stat--input">
-                <label htmlFor="go-adhoc" className="text-sm font-semibold mb-2 block">Ad-hoc Cijena (€/isporuka)</label>
-                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" className="go-calc__big-input" min="1" max="1000" />
+          <div className="go-calc__step">
+            <div className="go-calc__step-header">
+              <span className="go-calc__step-number">1</span>
+              <h3>Odaberite približan volumen</h3>
+            </div>
+            <div className="go-calc__plan go-calc__plan--modern" role="group" aria-label="Odabir paketa">
+              <button className="go-calc__pill go-calc__pill--modern" data-plan="mini" aria-pressed="true" type="button">
+                <span className="go-calc__pill-label">Mini</span>
+                <span className="go-calc__pill-range">1-10</span>
+              </button>
+              <button className="go-calc__pill go-calc__pill--modern" data-plan="standard" aria-pressed="false" type="button">
+                <span className="go-calc__pill-label">Standard</span>
+                <span className="go-calc__pill-range">11-40</span>
+              </button>
+              <button className="go-calc__pill go-calc__pill--modern" data-plan="partner" aria-pressed="false" type="button">
+                <span className="go-calc__pill-label">Partner</span>
+                <span className="go-calc__pill-range">41-80</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="go-calc__step">
+            <div className="go-calc__step-header">
+              <span className="go-calc__step-number">2</span>
+              <h3>Precizno podešavanje</h3>
+            </div>
+            <div className="go-calc__inputs">
+              <div className="go-calc__input-group">
+                <label htmlFor="go-events" className="go-calc__label">
+                  <span>Broj isporuka godišnje</span>
+                  <div className="go-calc__value">
+                    <span id="go-events-out" className="go-calc__value-number">12</span>
+                    <span className="go-calc__value-unit">isporuka</span>
+                  </div>
+                </label>
+                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" className="go-calc__slider" />
+              </div>
+              
+              <div className="go-calc__input-group go-calc__input-group--secondary">
+                <label htmlFor="go-adhoc" className="go-calc__label go-calc__label--small">
+                  Ad-hoc cijena (€/isporuka)
+                </label>
+                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" className="go-calc__input" min="1" max="1000" />
+              </div>
             </div>
           </div>
           
-          <div className="mt-4">
-              <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje</label>
-              <div className="go-calc__row items-center gap-4">
-                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" aria-describedby="go-events-help" className='flex-1' />
-                <div className="go-calc__stat text-center min-w-[120px]">
-                    <div id="go-events-out" className="text-4xl font-bold text-primary">12</div>
-                    <small className="text-muted-foreground">isporuka</small>
-                </div>
-              </div>
-          </div>
-          
-          <div className="go-calc__cta">
-            <button className="btn outline flex items-center gap-2" id="go-reset" type="button">
+          <div className="go-calc__actions">
+            <button className="go-calc__btn go-calc__btn--secondary" id="go-reset" type="button">
               <RotateCcw className="h-4 w-4" />
               Resetiraj
             </button>
-            <button className="btn primary flex items-center gap-2" type="button" onClick={() => document.getElementById('go-calculator')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
+            <button className="go-calc__btn go-calc__btn--primary" type="button" onClick={() => document.getElementById('go-calculator')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
               <TrendingUp className="h-4 w-4" />
-              Prikaži rezultate
+              Izračunaj
             </button>
           </div>
-
-          <p className="muted">Pretplata pokriva planiranje, arhivu i koordinaciju; svaka isporuka se fakturira po definiranoj cijeni paketa.</p>
         </div>
 
-        <div className="go-calc__card" aria-live="polite">
-          <div className="flex items-center gap-2 mb-4">
-            <Euro className="h-6 w-6 text-primary" />
-            <h2 className="go-calc__title">Rezultati</h2>
+        <div className="go-calc__card go-calc__card--results" aria-live="polite">
+          <div className="go-calc__results-header">
+            <div className="go-calc__results-icon">
+              <Euro className="h-6 w-6" />
+            </div>
+            <h2 className="go-calc__results-title">Vaš rezultat</h2>
           </div>
-          <div className="go-calc__grid">
-            <div className="go-calc__stat">
-              <small>Ukupno EUR/god</small>
-              <div className="go-calc__big"><span id="go-year">0</span></div>
+          
+          <div className="go-calc__summary">
+            <div className="go-calc__summary-main">
+              <div className="go-calc__summary-amount">
+                <span id="go-year" className="go-calc__amount">0</span>
+                <span className="go-calc__currency">€</span>
+              </div>
+              <div className="go-calc__summary-period">godišnje</div>
             </div>
-            <div className="go-calc__stat">
-              <small>Prosječno EUR/mj</small>
-              <div className="go-calc__big"><span id="go-month">0</span></div>
-            </div>
-          </div>
-          <div className="go-calc__grid">
-            <div className="go-calc__stat">
-              <small>Fiksno (pretplata)</small>
-              <div className="go-calc__big"><span id="go-sub">0</span> €</div>
-            </div>
-            <div className="go-calc__stat">
-              <small>Varijabilno (isporuke)</small>
-              <div className="go-calc__big"><span id="go-var">0</span> €</div>
+            <div className="go-calc__summary-monthly">
+              <span id="go-month" className="go-calc__monthly-amount">0</span>
+              <span className="go-calc__monthly-label">€/mjesec</span>
             </div>
           </div>
-          <p className="note" id="go-savings"></p>
-          <div id="go-reco" className="muted" style={{marginTop: '8px'}}></div>
-          <div className="go-calc__plan-cards">
-            <div className="go-calc__plan-card" data-plan-card="mini">
-              <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header flex items-center gap-2">
-                <Package className="h-4 w-4" />
-                Mini
-              </div>
-              <div className="go-calc__plan-price"><span data-total>0</span> €</div>
-              <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
-              <div className="go-calc__plan-details">
-                <div>1-10 isporuka</div>
-                <div>600€ + 250€/isporuka</div>
-              </div>
+
+          <div className="go-calc__breakdown">
+            <div className="go-calc__breakdown-item">
+              <span className="go-calc__breakdown-label">Fiksni dio</span>
+              <span className="go-calc__breakdown-value"><span id="go-sub">0</span> €</span>
             </div>
-            <div className="go-calc__plan-card" data-plan-card="standard">
-              <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header flex items-center gap-2">
-                <Package className="h-4 w-4" />
-                Standard
-              </div>
-              <div className="go-calc__plan-price"><span data-total>0</span> €</div>
-              <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
-              <div className="go-calc__plan-details">
-                <div>11-40 isporuka</div>
-                <div>1.800€ + 210€/isporuka</div>
-              </div>
+            <div className="go-calc__breakdown-item">
+              <span className="go-calc__breakdown-label">Varijabilni dio</span>
+              <span className="go-calc__breakdown-value"><span id="go-var">0</span> €</span>
             </div>
-            <div className="go-calc__plan-card" data-plan-card="partner">
-              <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header flex items-center gap-2">
-                <Package className="h-4 w-4" />
-                Partner
+          </div>
+          
+          <div className="go-calc__savings" id="go-savings"></div>
+          <div className="go-calc__recommendation" id="go-reco"></div>
+          <div className="go-calc__plans">
+            <h3 className="go-calc__plans-title">Svi paketi</h3>
+            <div className="go-calc__plan-cards">
+              <div className="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="mini">
+                <div className="go-calc__plan-badge">Preporučeno</div>
+                <div className="go-calc__plan-header">
+                  <Package className="go-calc__plan-icon" />
+                  <span className="go-calc__plan-name">Mini</span>
+                </div>
+                <div className="go-calc__plan-price">
+                  <span data-total className="go-calc__plan-amount">0</span>
+                  <span className="go-calc__plan-currency">€</span>
+                </div>
+                <div className="go-calc__plan-period">
+                  <span data-monthly>0</span> €/mjesec
+                </div>
+                <div className="go-calc__plan-details">
+                  <div className="go-calc__plan-range">1-10 isporuka</div>
+                  <div className="go-calc__plan-formula">600€ + 250€/isporuka</div>
+                </div>
               </div>
-              <div className="go-calc__plan-price"><span data-total>0</span> €</div>
-              <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
-              <div className="go-calc__plan-details">
-                <div>41-80 isporuka</div>
-                <div>3.600€ + 180€/isporuka</div>
+              
+              <div className="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="standard">
+                <div className="go-calc__plan-badge">Preporučeno</div>
+                <div className="go-calc__plan-header">
+                  <Package className="go-calc__plan-icon" />
+                  <span className="go-calc__plan-name">Standard</span>
+                </div>
+                <div className="go-calc__plan-price">
+                  <span data-total className="go-calc__plan-amount">0</span>
+                  <span className="go-calc__plan-currency">€</span>
+                </div>
+                <div className="go-calc__plan-period">
+                  <span data-monthly>0</span> €/mjesec
+                </div>
+                <div className="go-calc__plan-details">
+                  <div className="go-calc__plan-range">11-40 isporuka</div>
+                  <div className="go-calc__plan-formula">1.800€ + 210€/isporuka</div>
+                </div>
               </div>
-            </div>
-             <div className="go-calc__plan-card" data-plan-card="otokplus" style={{display: 'none'}}>
-              <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header flex items-center gap-2">
-                <Package className="h-4 w-4" />
-                Otok+
+              
+              <div className="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="partner">
+                <div className="go-calc__plan-badge">Preporučeno</div>
+                <div className="go-calc__plan-header">
+                  <Package className="go-calc__plan-icon" />
+                  <span className="go-calc__plan-name">Partner</span>
+                </div>
+                <div className="go-calc__plan-price">
+                  <span data-total className="go-calc__plan-amount">0</span>
+                  <span className="go-calc__plan-currency">€</span>
+                </div>
+                <div className="go-calc__plan-period">
+                  <span data-monthly>0</span> €/mjesec
+                </div>
+                <div className="go-calc__plan-details">
+                  <div className="go-calc__plan-range">41-80 isporuka</div>
+                  <div className="go-calc__plan-formula">3.600€ + 180€/isporuka</div>
+                </div>
               </div>
-              <div className="go-calc__plan-price"><span data-total>0</span> €</div>
-              <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
-              <div className="go-calc__plan-details">
-                <div>81-120 isporuka</div>
-                <div>6.000€ + 150€/isporuka</div>
+              
+              <div className="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="otokplus" style={{display: 'none'}}>
+                <div className="go-calc__plan-badge">Preporučeno</div>
+                <div className="go-calc__plan-header">
+                  <Package className="go-calc__plan-icon" />
+                  <span className="go-calc__plan-name">Otok+</span>
+                </div>
+                <div className="go-calc__plan-price">
+                  <span data-total className="go-calc__plan-amount">0</span>
+                  <span className="go-calc__plan-currency">€</span>
+                </div>
+                <div className="go-calc__plan-period">
+                  <span data-monthly>0</span> €/mjesec
+                </div>
+                <div className="go-calc__plan-details">
+                  <div className="go-calc__plan-range">81-120 isporuka</div>
+                  <div className="go-calc__plan-formula">6.000€ + 150€/isporuka</div>
+                </div>
               </div>
             </div>
           </div>

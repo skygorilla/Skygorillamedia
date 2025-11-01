@@ -1,0 +1,9 @@
+specVersion: v1alpha
+serviceId: glas-otoka-dataconnect
+location: europe-west1
+schema:
+  source: ./schema
+  datasource:
+    postgresql:
+      database: glas-otoka-db
+connectorDirs: ["./connectors"]
