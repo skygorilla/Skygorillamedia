@@ -22,3 +22,25 @@ I1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 12
 [error] [Firebase Plugin] requireAuth error: n.split is not a function
 [info] [Firebase Plugin] Stopping Data Connect toolkit
 [warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
+[debug] [2025-11-01T20:44:43.407Z] [Firebase Plugin] Activating Firebase extension.
+[debug] [2025-11-01T20:44:51.569Z] [Firebase Plugin] requireAuthWrapper
+[debug] [2025-11-01T20:44:51.571Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-01T20:44:51.634Z] [Firebase Plugin] VSCode notification server listening on port 40001
+[error] [Firebase Plugin] requireAuth error: n.split is not a function
+[info] [Firebase Plugin] Starting Data Connect toolkit (version 2.15.0) on port 50001
+[debug] [2025-11-01T20:45:24.905Z] W1101 20:45:24.902529     974 build.go:56] Failed to construct deployment metadata: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"W1101 20:45:24.902529     974 build.go:56] Failed to construct deployment metadata: rpc error: code = NotFound desc = no schema found for service \"glas-otoka-dataconnect\". No service has a schema.\n"}}
+[debug] [2025-11-01T20:45:24.908Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-11-01T20:45:24.908Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"dataconnect"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2025-11-01T20:45:24.909Z] Starting Data Connect Emulator with command {"binary":"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.15.0","args":["--logtostderr","-v=2","dev","--listen=localhost:50001","--config_dir=/home/user/studio/dataconnect","--enable_output_schema_extensions=true","--enable_output_generated_sdk=true"],"optionalArgs":["listen","config_dir","enable_output_schema_extensions","enable_output_generated_sdk"],"joinArgs":true,"shell":false,"port":9399} {"metadata":{"emulator":{"name":"dataconnect"},"message":"Starting Data Connect Emulator with command {\"binary\":\"/home/user/.cache/firebase/emulators/dataconnect-emulator-2.15.0\",\"args\":[\"--logtostderr\",\"-v=2\",\"dev\",\"--listen=localhost:50001\",\"--config_dir=/home/user/studio/dataconnect\",\"--enable_output_schema_extensions=true\",\"--enable_output_generated_sdk=true\"],\"optionalArgs\":[\"listen\",\"config_dir\",\"enable_output_schema_extensions\",\"enable_output_generated_sdk\"],\"joinArgs\":true,\"shell\":false,\"port\":9399}"}}
+[info] i  dataconnect: Data Connect Emulator logging to dataconnect-debug.log {"metadata":{"emulator":{"name":"dataconnect"},"message":"Data Connect Emulator logging to dataconnect-debug.log"}}
+[debug] [2025-11-01T20:45:25.032Z] I1101 20:45:24.946471     980 load.go:31] Reloading schema and connectors...
+E1101 20:45:24.958617     980 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
+E1101 20:45:24.958707     980 load.go:73] Could not load sources: 
+Errors: schema/schema.gql:2:6: Cannot redeclare type Query.
+I1101 20:45:24.961001     980 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+Generated sources: prelude.gql [73219B] 
+I1101 20:45:24.961080     980 load.go:74] Finished reloading
+I1101 20:45:24.978312     980 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+ {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1101 20:45:24.946471     980 load.go:31] Reloading schema and connectors...\nE1101 20:45:24.958617     980 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service \"glas-otoka-dataconnect\". No service has a schema.\nE1101 20:45:24.958707     980 load.go:73] Could not load sources: \nErrors: schema/schema.gql:2:6: Cannot redeclare type Query.\nI1101 20:45:24.961001     980 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] \nI1101 20:45:24.961080     980 load.go:74] Finished reloading\nI1101 20:45:24.978312     980 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
+[error] [Firebase Plugin] error:  {}

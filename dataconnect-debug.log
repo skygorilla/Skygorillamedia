@@ -1,8 +1,8 @@
-I1101 18:13:41.496423     294 load.go:31] Reloading schema and connectors...
-E1101 18:13:41.513324     294 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
-E1101 18:13:41.513400     294 load.go:73] Could not load sources: 
+I1101 20:45:24.946471     980 load.go:31] Reloading schema and connectors...
+E1101 20:45:24.958617     980 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service "glas-otoka-dataconnect". No service has a schema.
+E1101 20:45:24.958707     980 load.go:73] Could not load sources: 
 Errors: schema/schema.gql:2:6: Cannot redeclare type Query.
-I1101 18:13:41.524203     294 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
+I1101 20:45:24.961001     980 collector.go:107] schema extensions wrote into "/home/user/studio/dataconnect/.dataconnect/schema"
 Generated sources: prelude.gql [73219B] 
-I1101 18:13:41.526307     294 load.go:74] Finished reloading
-I1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001
+I1101 20:45:24.961080     980 load.go:74] Finished reloading
+I1101 20:45:24.978312     980 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001

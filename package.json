@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3000",
+    "dev": "next dev -p 3000",
     "dev:restart": "pkill -f 'next dev' || true && npm run dev",
     "build:id": "echo '{\"buildId\":\"'$(date +%s)'\",\"timestamp\":\"'$(date -Iseconds)'\"}' > public/build-id.json",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
