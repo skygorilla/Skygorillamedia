@@ -1,10 +1,10 @@
 
 'use client';
 
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, X } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'Uvod', description: 'Homepage' },
@@ -47,8 +47,6 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
                   </Link>
                 </li>
               ))}
-            </ul>
-          </nav>
               <li role="none">
                 <Link
                   href="/sitemap"
