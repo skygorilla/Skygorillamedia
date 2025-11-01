@@ -11,8 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth, useUser } from '@/firebase';
+import { initiateEmailSignIn } from '@/firebase/non-blocking-login';
+import { useEffect } from 'react';
 
 const loginSchema = z.object({
   email: z.string().email('Neispravna email adresa'),
@@ -26,6 +27,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const router = useRouter();
+  const { user, isUserLoading, userError } = useUser();
 
   const {
     register,
@@ -35,24 +37,26 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginForm) => {
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+  useEffect(() => {
+    if (!isUserLoading && user) {
       toast({
         title: 'Prijava uspješna',
         description: 'Dobrodošli natrag!',
       });
-      router.push('/');
-    } catch (error: any) {
+      router.push('/profile');
+    } else if (userError) {
       toast({
         variant: 'destructive',
         title: 'Greška pri prijavi',
-        description: error.message,
+        description: userError.message,
       });
-    } finally {
       setLoading(false);
     }
+  }, [user, isUserLoading, userError, router, toast]);
+
+  const onSubmit = (data: LoginForm) => {
+    setLoading(true);
+    initiateEmailSignIn(auth, data.email, data.password);
   };
 
   return (

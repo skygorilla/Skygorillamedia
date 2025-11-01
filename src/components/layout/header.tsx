@@ -1,4 +1,3 @@
-
 'use client';
 
 import { forwardRef } from 'react';
@@ -7,6 +6,16 @@ import { usePathname } from 'next/navigation';
 import { Settings, LogOut, User as UserIcon, LogIn, UserPlus } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 
 const navItems = [
   { href: '/', label: 'Uvod', description: 'Homepage' },
@@ -58,12 +67,38 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
           <div className="absolute right-16 top-1/2 -translate-y-1/2 flex items-center gap-2">
             {!isUserLoading && (
               user ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-white text-sm hidden md:block">{user.email}</span>
-                  <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Sign out">
-                    <LogOut className="h-4 w-4 text-white" />
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.photoURL ?? ''} alt={user.email ?? ''} />
+                        <AvatarFallback>{user.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.displayName ?? 'Korisnik'}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Profil</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Odjava</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <div className="flex items-center gap-1">
                   <Button asChild variant="ghost" size="sm">

@@ -1,20 +1,31 @@
 'use client';
 
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '@/lib/firebase';
+import { useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { LoadingSpinner } from './loading-spinner';
 
 interface AuthGuardProps {
   children: React.ReactNode;
-  fallback?: React.ReactNode;
 }
 
-export function AuthGuard({ children, fallback }: AuthGuardProps) {
-  const [user, loading, error] = useAuthState(auth);
+export function AuthGuard({ children }: AuthGuardProps) {
+  const { user, isUserLoading } = useUser();
+  const router = useRouter();
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <div data-error className="error-message">Auth error: {error.message}</div>;
-  if (!user && fallback) return <>{fallback}</>;
-  
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [isUserLoading, user, router]);
+
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return <>{children}</>;
 }

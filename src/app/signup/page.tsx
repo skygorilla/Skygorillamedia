@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useAuth, useUser } from '@/firebase';
+import { initiateEmailSignUp } from '@/firebase/non-blocking-login';
 
 const signupSchema = z.object({
   email: z.string().email('Neispravna email adresa'),
@@ -26,6 +26,7 @@ export default function SignupPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const router = useRouter();
+  const { user, isUserLoading, userError } = useUser();
 
   const {
     register,
@@ -35,24 +36,26 @@ export default function SignupPage() {
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = async (data: SignupForm) => {
-    setLoading(true);
-    try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
+  useEffect(() => {
+    if (!isUserLoading && user) {
       toast({
         title: 'Registracija uspješna',
         description: 'Vaš račun je kreiran.',
       });
-      router.push('/');
-    } catch (error: any) {
+      router.push('/profile');
+    } else if (userError) {
       toast({
         variant: 'destructive',
         title: 'Greška pri registraciji',
-        description: error.message,
+        description: userError.message,
       });
-    } finally {
       setLoading(false);
     }
+  }, [user, isUserLoading, userError, router, toast]);
+
+  const onSubmit = (data: SignupForm) => {
+    setLoading(true);
+    initiateEmailSignUp(auth, data.email, data.password);
   };
 
   return (
