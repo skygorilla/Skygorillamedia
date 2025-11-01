@@ -1,0 +1,54 @@
+/**
+ * @fileoverview Firestore Security Rules for the Otok Scroll application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model. Each user can only access their own data.
+ *
+ * Data Structure:
+ * All user data is nested under /users/{userId}, providing clear isolation.
+ *
+ * Key Security Decisions:
+ * - Users can only create, read, update, and delete their own documents.
+ * - Listing all users is disallowed.
+ * - Data validation is relaxed for prototyping purposes, focusing on ownership.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Controls access to user profile information. Only the authenticated user can create, read, update, or delete their own profile.
+     * @path /users/{userId}
+     * @allow (create) User with ID 'user123' creates their own profile document with a matching 'id' field.
+     * @allow (get, update, delete) Authenticated user 'user123' reads, updates, or deletes their own profile document.
+     * @deny (create, update, delete) Authenticated user 'user456' attempts to create, update, or delete user 'user123's profile.
+     * @principle Enforces document ownership for all operations.
+     */
+    match /users/{userId} {
+      // Helper function to check if the request is made by the owner of the document.
+      function isOwner(userId) {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      // Helper function to check if the request is made by the existing owner of the document.
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      // Allow the user to read their own profile.
+      allow get: if isOwner(userId);
+
+      // Disallow listing all users.
+      allow list: if false;
+
+      // Allow the user to create their own profile if the userId matches the auth.uid and the id in the request data.
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+
+      // Allow the user to update their own profile.  The id field must remain unchanged.
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+
+      // Allow the user to delete their own profile.
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}

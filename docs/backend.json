@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Otok Scroll application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "email"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. Each document is owned by the user with ID {userId}.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, matching the Firebase Auth UID."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure prioritizes authorization independence and simplicity. All user data is stored under the `/users/{userId}` path, providing clear ownership. Since the only entity is `User` and authentication providers are `password` and `anonymous`, there's no collaborative data or global roles to manage. This simplifies security rules significantly.\n\nAuthorization Independence is achieved naturally through path-based ownership. Each user's data resides under their specific `userId`, eliminating the need for `get()` calls in security rules. List operations are inherently secure as rules will check `request.auth.uid` against the `userId` path segment, ensuring users can only access their own data. The design leverages structural segregation, where each collection (`/users/{userId}`) contains documents with identical security needs (private user data).\n\nThe structure is designed for the Otok Scroll application's login feature, focusing on storing user profiles."
+  }
+}
