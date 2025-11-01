@@ -33,7 +33,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
                   href={item.href}
                   role="menuitem"
                   aria-current={isActiveRoute(item.href) ? 'page' : undefined}
-                  className={`sg-nav__link ${isActiveRoute(item.href) ? 'sg-nav__link--active' : ''}`}
+                  className={isActiveRoute(item.href) ? 'active' : ''}
                   tabIndex={0}
                 >
                   {item.label}

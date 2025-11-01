@@ -6,15 +6,21 @@ import { rateLimit } from '@/utils/inputValidator';
  */
 
 export function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  
-  // Skip rate limiting in development
-  if (process.env.NODE_ENV !== 'development') {
-    const clientIp = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
-    if (!rateLimit(clientIp, 100, 60000)) {
-      return new NextResponse('Too Many Requests', { status: 429 });
+  try {
+    const response = NextResponse.next();
+    
+    // Skip rate limiting in development
+    if (process.env.NODE_ENV !== 'development') {
+      const clientIp = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+      try {
+        if (!rateLimit(clientIp, 100, 60000)) {
+          return new NextResponse('Too Many Requests', { status: 429 });
+        }
+      } catch (error) {
+        console.error('Rate limiting error:', error);
+        return new NextResponse('Internal Server Error', { status: 500 });
+      }
     }
-  }
 
   // Security headers - allow framing in development
   if (process.env.NODE_ENV === 'development') {
@@ -48,44 +54,49 @@ export function middleware(request: NextRequest) {
   
   response.headers.set('Content-Security-Policy', csp);
 
-  // Block suspicious requests
-  const userAgent = request.headers.get('user-agent') || '';
-  const suspiciousPatterns = [
-    /sqlmap/i,
-    /nikto/i,
-    /nessus/i,
-    /burp/i,
-    /nmap/i,
-    /<script/i,
-    /javascript:/i,
-    /vbscript:/i,
-  ];
+    // Block suspicious requests
+    try {
+      const userAgent = request.headers.get('user-agent') || '';
+      const suspiciousPatterns = [
+        /sqlmap/i, /nikto/i, /nessus/i, /burp/i, /nmap/i,
+        /<script/i, /javascript:/i, /vbscript:/i,
+      ];
 
-  if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
-    return new NextResponse('Forbidden', { status: 403 });
-  }
-
-  // Block requests with suspicious query parameters
-  const url = request.nextUrl;
-  const suspiciousParams = ['<script', 'javascript:', 'vbscript:', 'onload=', 'onerror='];
-  
-  for (const [key, value] of url.searchParams.entries()) {
-    if (suspiciousParams.some(pattern => key.includes(pattern) || value.includes(pattern))) {
-      return new NextResponse('Bad Request', { status: 400 });
+      if (suspiciousPatterns.some(pattern => pattern.test(userAgent))) {
+        return new NextResponse('Forbidden', { status: 403 });
+      }
+    } catch (error) {
+      console.error('User agent validation error:', error);
     }
-  }
 
-  // Validate file upload paths
-  if (request.method === 'POST' && url.pathname.includes('/upload')) {
-    const contentType = request.headers.get('content-type') || '';
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    
-    if (!allowedTypes.some(type => contentType.includes(type))) {
-      return new NextResponse('Unsupported Media Type', { status: 415 });
+    // Block requests with suspicious query parameters
+    try {
+      const suspiciousParams = ['<script', 'javascript:', 'vbscript:', 'onload=', 'onerror='];
+      
+      for (const [key, value] of request.nextUrl.searchParams.entries()) {
+        if (suspiciousParams.some(pattern => key.includes(pattern) || value.includes(pattern))) {
+          return new NextResponse('Bad Request', { status: 400 });
+        }
+      }
+    } catch (error) {
+      console.error('Query parameter validation error:', { error: error instanceof Error ? error.message : 'Unknown error' });
     }
-  }
 
-  return response;
+    // Validate file upload paths
+    if (request.method === 'POST' && request.nextUrl.pathname.includes('/upload')) {
+      const contentType = request.headers.get('content-type') || '';
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      
+      if (!allowedTypes.some(type => contentType.includes(type))) {
+        return new NextResponse('Unsupported Media Type', { status: 415 });
+      }
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Middleware error:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
 }
 
 export const config = {

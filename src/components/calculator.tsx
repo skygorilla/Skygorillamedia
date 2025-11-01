@@ -100,7 +100,8 @@ export default function Calculator() {
     function compute() {
       try {
         if (!events || !eventsOut || !yearOut || !monthOut || !subOut || !varOut || !savings) {
-          throw new Error('Required DOM elements not found');
+          console.error('Calculator: Required DOM elements not found');
+          return;
         }
 
       const ev = parseInt(events.value || '0', 10);
@@ -135,7 +136,7 @@ export default function Calculator() {
       
       updateCards(ev);
       } catch (error) {
-        console.error('Calculator computation failed:', error);
+        console.error('Calculator computation failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
       }
     }
     

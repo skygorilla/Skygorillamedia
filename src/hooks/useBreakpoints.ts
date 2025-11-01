@@ -26,8 +26,8 @@ export const useBreakpoints = () => {
     // Log breakpoint creation with structured logging
     console.log(JSON.stringify({
       event: 'breakpoint_set',
-      file: file.replace(/[<>"'&]/g, ''),
-      line,
+      file: file.replace(/[<>"'&]/g, '').substring(0, 200),
+      line: Math.max(0, Math.min(line, 999999)),
       timestamp: new Date().toISOString()
     }));
   };
@@ -48,34 +48,50 @@ export const useBreakpoints = () => {
     setBreakpoints([]);
   };
 
-  // Simulate debugger controls
+  // Simulate debugger controls with validation
   const resume = () => {
-    setPaused(false);
-    console.log(JSON.stringify({
-      event: 'debugger_resumed',
-      timestamp: new Date().toISOString()
-    }));
+    try {
+      setPaused(false);
+      console.log(JSON.stringify({
+        event: 'debugger_resumed',
+        timestamp: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Resume failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
+    }
   };
 
   const stepOver = () => {
-    console.log(JSON.stringify({
-      event: 'debugger_step_over',
-      timestamp: new Date().toISOString()
-    }));
+    try {
+      console.log(JSON.stringify({
+        event: 'debugger_step_over',
+        timestamp: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Step over failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
+    }
   };
 
   const stepInto = () => {
-    console.log(JSON.stringify({
-      event: 'debugger_step_into',
-      timestamp: new Date().toISOString()
-    }));
+    try {
+      console.log(JSON.stringify({
+        event: 'debugger_step_into',
+        timestamp: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Step into failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
+    }
   };
 
   const stepOut = () => {
-    console.log(JSON.stringify({
-      event: 'debugger_step_out',
-      timestamp: new Date().toISOString()
-    }));
+    try {
+      console.log(JSON.stringify({
+        event: 'debugger_step_out',
+        timestamp: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Step out failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
+    }
   };
 
   return {

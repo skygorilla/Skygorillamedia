@@ -39,16 +39,15 @@ class Logger {
   }
 
   private sanitizeMessage(message: string): string {
-    return message.replace(/[<>\"'&]/g, (match) => {
-      const entities: Record<string, string> = {
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#x27;',
-        '&': '&amp;',
-      };
-      return entities[match] || match;
-    });
+    return message
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t');
   }
 
   private createLogEntry(
@@ -76,14 +75,24 @@ class Logger {
   private sanitizeMetadata(metadata: Record<string, unknown>): Record<string, unknown> {
     const sanitized: Record<string, unknown> = {};
     
-    for (const [key, value] of Object.entries(metadata)) {
-      if (typeof value === 'string') {
-        sanitized[key] = this.sanitizeMessage(value);
-      } else if (typeof value === 'object' && value !== null) {
-        sanitized[key] = JSON.stringify(value);
-      } else {
-        sanitized[key] = value;
+    try {
+      for (const [key, value] of Object.entries(metadata)) {
+        const sanitizedKey = this.sanitizeMessage(key);
+        if (typeof value === 'string') {
+          sanitized[sanitizedKey] = this.sanitizeMessage(value);
+        } else if (typeof value === 'object' && value !== null) {
+          try {
+            sanitized[sanitizedKey] = JSON.stringify(value).substring(0, 1000);
+          } catch {
+            sanitized[sanitizedKey] = '[Object]';
+          }
+        } else {
+          sanitized[sanitizedKey] = String(value).substring(0, 100);
+        }
       }
+    } catch (error) {
+      console.error('Metadata sanitization error:', error);
+      return { error: 'Failed to sanitize metadata' };
     }
     
     return sanitized;

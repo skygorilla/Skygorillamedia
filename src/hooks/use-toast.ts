@@ -75,57 +75,60 @@ const addToRemoveQueue = (toastId: string) => {
 }
 
 export const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "ADD_TOAST":
-      return {
-        ...state,
-        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
-      }
-
-    case "UPDATE_TOAST":
-      return {
-        ...state,
-        toasts: state.toasts.map((t) =>
-          t.id === action.toast.id ? { ...t, ...action.toast } : t
-        ),
-      }
-
-    case "DISMISS_TOAST": {
-      const { toastId } = action
-
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
-      if (toastId) {
-        addToRemoveQueue(toastId)
-      } else {
-        state.toasts.forEach((toast) => {
-          addToRemoveQueue(toast.id)
-        })
-      }
-
-      return {
-        ...state,
-        toasts: state.toasts.map((t) =>
-          t.id === toastId || toastId === undefined
-            ? {
-                ...t,
-                open: false,
-              }
-            : t
-        ),
-      }
-    }
-    case "REMOVE_TOAST":
-      if (action.toastId === undefined) {
+  try {
+    switch (action.type) {
+      case "ADD_TOAST":
         return {
           ...state,
-          toasts: [],
+          toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+        }
+
+      case "UPDATE_TOAST":
+        return {
+          ...state,
+          toasts: state.toasts.map((t) =>
+            t.id === action.toast.id ? { ...t, ...action.toast } : t
+          ),
+        }
+
+      case "DISMISS_TOAST": {
+        const { toastId } = action
+
+        try {
+          if (toastId) {
+            addToRemoveQueue(toastId)
+          } else {
+            state.toasts.forEach((toast) => {
+              addToRemoveQueue(toast.id)
+            })
+          }
+        } catch (error) {
+          console.error('Toast queue error:', error)
+        }
+
+        return {
+          ...state,
+          toasts: state.toasts.map((t) =>
+            t.id === toastId || toastId === undefined
+              ? { ...t, open: false }
+              : t
+          ),
         }
       }
-      return {
-        ...state,
-        toasts: state.toasts.filter((t) => t.id !== action.toastId),
-      }
+      case "REMOVE_TOAST":
+        if (action.toastId === undefined) {
+          return { ...state, toasts: [] }
+        }
+        return {
+          ...state,
+          toasts: state.toasts.filter((t) => t.id !== action.toastId),
+        }
+      default:
+        return state
+    }
+  } catch (error) {
+    console.error('Toast reducer error:', error)
+    return state
   }
 }
 
@@ -143,31 +146,48 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, "id">
 
 function toast({ ...props }: Toast) {
-  const id = genId()
+  try {
+    const id = genId()
 
-  const update = (props: ToasterToast) =>
+    const update = (props: ToasterToast) => {
+      try {
+        dispatch({
+          type: "UPDATE_TOAST",
+          toast: { ...props, id },
+        })
+      } catch (error) {
+        console.error('Toast update error:', error)
+      }
+    }
+    
+    const dismiss = () => {
+      try {
+        dispatch({ type: "DISMISS_TOAST", toastId: id })
+      } catch (error) {
+        console.error('Toast dismiss error:', error)
+      }
+    }
+
     dispatch({
-      type: "UPDATE_TOAST",
-      toast: { ...props, id },
-    })
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
-
-  dispatch({
-    type: "ADD_TOAST",
-    toast: {
-      ...props,
-      id,
-      open: true,
-      onOpenChange: (open) => {
-        if (!open) dismiss()
+      type: "ADD_TOAST",
+      toast: {
+        ...props,
+        id,
+        open: true,
+        onOpenChange: (open) => {
+          if (!open) dismiss()
+        },
       },
-    },
-  })
+    })
 
-  return {
-    id: id,
-    dismiss,
-    update,
+    return { id, dismiss, update }
+  } catch (error) {
+    console.error('Toast creation error:', error)
+    return {
+      id: 'error',
+      dismiss: () => {},
+      update: () => {}
+    }
   }
 }
 

@@ -6,6 +6,7 @@ import { ErrorNotification } from '@/components/ui/error-notification';
 import { ErrorBadge } from '@/components/ui/error-badge';
 import { ConfigFixer } from '@/components/ui/config-fixer';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import DevNav from '@/components/dev-nav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' })
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
         <ErrorBoundary fallback={<div className="error-fallback">Something went wrong. Please refresh the page.</div>}>
+          <DevNav />
           <HealthNotification />
           <ErrorNotification />
           <ErrorBadge />
