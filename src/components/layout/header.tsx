@@ -23,8 +23,6 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
   
   const isActiveRoute = (href: string) => pathname === href;
   
-
-  
   return (
     <>
       <header className="network-header" id="topHeader" ref={ref}>
@@ -61,5 +59,3 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
 Header.displayName = 'Header';
 
 export default Header;
-
-    
