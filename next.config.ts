@@ -41,7 +41,6 @@ const nextConfig: NextConfig = {
       return [];
     }
   },
-  output: 'standalone',
   
   images: {
     remotePatterns: [
