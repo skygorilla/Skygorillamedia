@@ -138,33 +138,26 @@
     z-index: 10;
 }
 
-/* Other nav items - 3D layered effect */
-.menu a:not([href="/pitch"]):hover {
-    height: 35px;
-    margin: 2.5px 0;
-    z-index: 2;
-}
+/* 3D Depth Effect - Distance from center Glas Otoka */
+/* Politika (adjacent to center) */
+.menu a[href="/politika"]:hover { background: #FF9800; color: #fff; height: 36px; margin: 2px 0; z-index: 9; }
+.menu a[href="/politika"].active { background: #FF9800; color: #fff; height: 36px; margin: 2px 0; z-index: 9; }
 
-.menu a[href="/"]:hover { background: #4CAF50; color: #fff; }
-.menu a[href="/pretplate"]:hover { background: #2196F3; color: #fff; }
-.menu a[href="/politika"]:hover { background: #FF9800; color: #fff; }
-.menu a[href="/kultura"]:hover { background: #9C27B0; color: #fff; }
-.menu a[href="/sport"]:hover { background: #00BCD4; color: #fff; }
-.menu a[href="/kontakt"]:hover { background: #795548; color: #fff; }
+/* Pretplate & Kultura (1 step away) */
+.menu a[href="/pretplate"]:hover { background: #2196F3; color: #fff; height: 32px; margin: 4px 0; z-index: 8; }
+.menu a[href="/pretplate"].active { background: #2196F3; color: #fff; height: 32px; margin: 4px 0; z-index: 8; }
+.menu a[href="/kultura"]:hover { background: #9C27B0; color: #fff; height: 32px; margin: 4px 0; z-index: 8; }
+.menu a[href="/kultura"].active { background: #9C27B0; color: #fff; height: 32px; margin: 4px 0; z-index: 8; }
 
-/* Active states */
-.menu a.active:not([href="/pitch"]) {
-    height: 35px;
-    margin: 2.5px 0;
-    z-index: 5;
-}
+/* Uvod & Sport (2 steps away) */
+.menu a[href="/"]:hover { background: #4CAF50; color: #fff; height: 28px; margin: 6px 0; z-index: 7; }
+.menu a[href="/"].active { background: #4CAF50; color: #fff; height: 28px; margin: 6px 0; z-index: 7; }
+.menu a[href="/sport"]:hover { background: #00BCD4; color: #fff; height: 28px; margin: 6px 0; z-index: 7; }
+.menu a[href="/sport"].active { background: #00BCD4; color: #fff; height: 28px; margin: 6px 0; z-index: 7; }
 
-.menu a[href="/"].active { background: #4CAF50; color: #fff; }
-.menu a[href="/pretplate"].active { background: #2196F3; color: #fff; }
-.menu a[href="/politika"].active { background: #FF9800; color: #fff; }
-.menu a[href="/kultura"].active { background: #9C27B0; color: #fff; }
-.menu a[href="/sport"].active { background: #00BCD4; color: #fff; }
-.menu a[href="/kontakt"].active { background: #795548; color: #fff; }
+/* Kontakt (furthest from center) */
+.menu a[href="/kontakt"]:hover { background: #795548; color: #fff; height: 24px; margin: 8px 0; z-index: 6; }
+.menu a[href="/kontakt"].active { background: #795548; color: #fff; height: 24px; margin: 8px 0; z-index: 6; }
 
 .section { padding: 64px 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
