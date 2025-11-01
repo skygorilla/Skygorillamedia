@@ -14,9 +14,12 @@ export default function Calculator() {
     const subOut = document.getElementById('go-sub');
     const varOut = document.getElementById('go-var');
     const savings = document.getElementById('go-savings');
-    const planPills = document.querySelectorAll('.go-calc__pill');
+    const planPills = document.querySelectorAll('.go-calc__pill--modern');
     const resetBtn = document.getElementById('go-reset');
     const otokPlusCard = document.querySelector('[data-plan-card="otokplus"]');
+
+    if (!events || !eventsOut || !adhoc || !monthOut || !yearOut || !subOut || !varOut || !savings || !planPills || !resetBtn) return;
+
 
     const packages = {
       mini: { sub: 600, rate: 250, label: 'Mini', volume: [1, 10] },
@@ -70,7 +73,7 @@ export default function Calculator() {
     function updateCards(n: number) {
         const recommendedPlan = getPlanByVolume(n);
         
-        document.querySelectorAll('.go-calc__plan-card').forEach(card => {
+        document.querySelectorAll('.go-calc__plan-card--modern').forEach(card => {
             const cardEl = card as HTMLElement;
             const planKey = cardEl.dataset.planCard;
 
@@ -366,4 +369,5 @@ export default function Calculator() {
   );
 }
 
+    
     

@@ -314,401 +314,86 @@ export default function PitchPage() {
 
           {/* ================= MAIN ================= */}
           <main>
-            {/* ===== Calculator ===== */}
+            <!-- ===== Calculator ===== -->
             <section class="go-calc section" id="go-calculator" aria-labelledby="calc-title">
-              <div class="container go-calc__wrap">
-                <div class="go-calc__card">
-                  <h2 id="calc-title" class="go-calc__title">Kalkulator — Mini / Standard / Prošireni</h2>
-                  <p class="go-calc__muted">Unesi očekivani broj isporuka godišnje i odaberi paket. Cijene su okvirne (partnerske).</p>
-
-                  <div class="go-calc__plan" role="group" aria-label="Odabir paketa">
-                    <button class="go-calc__pill" data-plan="mini" aria-pressed="true">Mini</button>
-                    <button class="go-calc__pill" data-plan="standard" aria-pressed="false">Standard</button>
-                    <button class="go-calc__pill" data-plan="prosireni" aria-pressed="false">Prošireni</button>
-                  </div>
-
-                  <div class="go-calc__row" style="margin-top:16px">
-                    <div>
-                      <label for="go-events">Broj isporuka godišnje</label>
-                      <input id="go-events" type="range" min="0" max="60" step="1" value="12" aria-describedby="go-events-help">
-                      <div class="help" id="go-events-help"><span id="go-events-out">12</span> isporuka / godinu</div>
+            <div class="container go-calc__wrap">
+                <div class="go-calc__card go-calc__card--modern">
+                    <div class="go-calc__header">
+                        <div class="go-calc__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 4 16.25" /><path d="M4 15.25V18" /><path d="M4.75 17.25H6.5" /><path d="M9 10a1 1 0 1 0 2 0 1 1 0 0 0-2 0" /><path d="M15 10a1 1 0 1 0 2 0 1 1 0 0 0-2 0" /><path d="M16 15s-2-3-4-3-4 3-4 3" /></svg>
+                        </div>
+                        <div>
+                            <h2 id="calc-title" class="go-calc__title">Kalkulator Pretplate</h2>
+                            <p class="go-calc__subtitle">Pronađite idealnu pretplatu za vaše potrebe</p>
+                        </div>
                     </div>
-                    <div>
-                      <label for="go-sub-fee">Godišnja pretplata (€)</label>
-                      <input id="go-sub-fee" type="number" value="900" inputmode="numeric">
-                      <div class="help">Raspon po paketu: <span id="go-sub-range">Mini 600–900</span></div>
+                    <div class="go-calc__step">
+                        <div class="go-calc__step-header">
+                            <span class="go-calc__step-number">1</span>
+                            <h3>Odaberite približan volumen</h3>
+                        </div>
+                        <div class="go-calc__plan go-calc__plan--modern" role="group" aria-label="Odabir paketa">
+                            <button class="go-calc__pill go-calc__pill--modern" data-plan="mini" aria-pressed="true" type="button"><span class="go-calc__pill-label">Mini</span><span class="go-calc__pill-range">1-10</span></button>
+                            <button class="go-calc__pill go-calc__pill--modern" data-plan="standard" aria-pressed="false" type="button"><span class="go-calc__pill-label">Standard</span><span class="go-calc__pill-range">11-40</span></button>
+                            <button class="go-calc__pill go-calc__pill--modern" data-plan="partner" aria-pressed="false" type="button"><span class="go-calc__pill-label">Partner</span><span class="go-calc__pill-range">41-80</span></button>
+                        </div>
                     </div>
-                  </div>
-
-                  <div class="go-calc__row">
-                    <div>
-                      <label for="go-per-price">Trenutna cijena po isporuci (€)</label>
-                      <input id="go-per-price" type="number" readonly value="120" inputmode="numeric">
-                      <div class="help">Marginalne stope: <span id="go-per-range">1–20: 150 • 21–30: 100 • 31+: 70</span></div>
+                    <div class="go-calc__step">
+                        <div class="go-calc__step-header">
+                            <span class="go-calc__step-number">2</span>
+                            <h3>Precizno podešavanje</h3>
+                        </div>
+                        <div class="go-calc__inputs">
+                            <div class="go-calc__input-group">
+                                <label for="go-events" class="go-calc__label">
+                                    <span>Broj isporuka godišnje</span>
+                                    <div class="go-calc__value"><span id="go-events-out" class="go-calc__value-number">12</span><span class="go-calc__value-unit">isporuka</span></div>
+                                </label>
+                                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" class="go-calc__slider" />
+                            </div>
+                            <div class="go-calc__input-group go-calc__input-group--secondary">
+                                <label for="go-adhoc" class="go-calc__label go-calc__label--small">Ad-hoc cijena (€/isporuka)</label>
+                                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" class="go-calc__input" min="1" max="1000" />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                      <label for="go-adhoc">Ad-hoc usporedba (€ / isporuka)</label>
-                      <input id="go-adhoc" type="number" value="220" inputmode="numeric">
-                      <div class="help">Ad-hoc = jednokratna usluga bez pretplate (ne uključuje planiranje/arhivu)</div>
+                    <div class="go-calc__actions">
+                        <button class="go-calc__btn go-calc__btn--secondary" id="go-reset" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6" /><path d="M21 12A9 9 0 0 0 6 5.3L3 8" /><path d="M21 22v-6h-6" /><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" /></svg>Resetiraj</button>
+                        <button class="go-calc__btn go-calc__btn--primary" type="button" onClick="document.getElementById('go-calculator').scrollIntoView({ behavior: 'smooth', block: 'center' })"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>Izračunaj</button>
                     </div>
-                  </div>
-
-                  <div class="go-calc__cta">
-                    <button class="btn primary" id="go-suggest">Predloži isplativiji paket</button>
-                    <button class="btn outline" id="go-reset" type="button">Reset</button>
-                  </div>
-
-                  <p class="muted" style="margin-top:8px">Pretplata pokriva planiranje, arhivu i koordinaciju; svaka isporuka se fakturira po partnerskoj cijeni.</p>
                 </div>
-
-                <div class="go-calc__card" aria-live="polite">
-                  <h2 class="go-calc__title">Rezultati</h2>
-                  <div class="go-calc__grid">
-                    <div class="go-calc__stat">
-                      <small>EUR/god</small>
-                      <div class="go-calc__big"><span id="go-year">0</span></div>
+                <div class="go-calc__card go-calc__card--results" aria-live="polite">
+                    <div class="go-calc__results-header">
+                        <div class="go-calc__results-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.4 16.4c-1.37 2.1-3.68 3.6-6.4 3.6-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9" /><path d="M12 2v4" /><path d="m16.2 7.8 2.1-2.1" /><path d="M22 12h-4" /><path d="m7.8 16.2-2.1 2.1" /><path d="M12 12.5a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-5 0" /><path d="M12 20a8 8 0 0 0 8-8" /><path d="m17 17 5 5" /></svg>
+                        </div>
+                        <h2 class="go-calc__results-title">Vaš rezultat</h2>
                     </div>
-                    <div class="go-calc__stat">
-                      <small>EUR/mj</small>
-                      <div class="go-calc__big"><span id="go-month">0</span></div>
+                    <div class="go-calc__summary">
+                        <div class="go-calc__summary-main">
+                            <div class="go-calc__summary-amount"><span id="go-year" class="go-calc__amount">0</span><span class="go-calc__currency">€</span></div>
+                            <div class="go-calc__summary-period">godišnje</div>
+                        </div>
+                        <div class="go-calc__summary-monthly"><span id="go-month" class="go-calc__monthly-amount">0</span><span class="go-calc__monthly-label">€/mjesec</span></div>
                     </div>
-                  </div>
-                  <div class="go-calc__grid">
-                    <div class="go-calc__stat">
-                      <small>Fiksno (pretplata)</small>
-                      <div class="go-calc__big"><span id="go-sub">0</span> EUR</div>
+                    <div class="go-calc__breakdown">
+                        <div class="go-calc__breakdown-item"><span class="go-calc__breakdown-label">Fiksni dio</span><span class="go-calc__breakdown-value"><span id="go-sub">0</span> €</span></div>
+                        <div class="go-calc__breakdown-item"><span class="go-calc__breakdown-label">Varijabilni dio</span><span class="go-calc__breakdown-value"><span id="go-var">0</span> €</span></div>
                     </div>
-                    <div class="go-calc__stat">
-                      <small>Varijabilno (isporuke)</small>
-                      <div class="go-calc__big"><span id="go-var">0</span> EUR</div>
+                    <div class="go-calc__savings" id="go-savings"></div>
+                    <div class="go-calc__recommendation" id="go-reco"></div>
+                    <div class="go-calc__plans">
+                        <h3 class="go-calc__plans-title">Svi paketi</h3>
+                        <div class="go-calc__plan-cards">
+                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="mini"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v4" /><path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4" /><path d="M12 12V6" /><path d="M12 18v-6" /></svg><span class="go-calc__plan-name">Mini</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">1-10 isporuka</div><div class="go-calc__plan-formula">600€ + 250€/isporuka</div></div></div>
+                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="standard"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m20 12-1.35-1.69a2.5 2.5 0 0 0-4.3 0L12 12" /><path d="m4 12 1.35-1.69a2.5 2.5 0 0 1 4.3 0L12 12" /><path d="M20 12v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4" /><path d="M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /><path d="M12 12v10" /></svg><span class="go-calc__plan-name">Standard</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">11-40 isporuka</div><div class="go-calc__plan-formula">1.800€ + 210€/isporuka</div></div></div>
+                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="partner"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg><span class="go-calc__plan-name">Partner</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">41-80 isporuka</div><div class="go-calc__plan-formula">3.600€ + 180€/isporuka</div></div></div>
+                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="otokplus" style="display: none;"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg><span class="go-calc__plan-name">Otok+</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">81-120 isporuka</div><div class="go-calc__plan-formula">6.000€ + 150€/isporuka</div></div></div>
+                        </div>
                     </div>
-                  </div>
-                  <p class="note" id="go-savings"></p>
-                  <div id="go-reco" class="muted" style="margin-top:8px"></div>
-                  <div style="margin-top:12px">
-                    <div style="font-weight:600;margin-bottom:8px">Usporedba planova (procjena)</div>
-                    <table style="width:100%;border-collapse:collapse" aria-describedby="calc-title">
-                      <thead>
-                        <tr style="text-align:left;border-bottom:1px solid var(--color-border)">
-                          <th style="padding:6px 4px">Plan</th>
-                          <th style="padding:6px 4px">Pretplata (€)</th>
-                          <th style="padding:6px 4px">Cijena/isporuka (€)</th>
-                          <th style="padding:6px 4px">Isporuke (n)</th>
-                          <th style="padding:6px 4px">Ukupno/god (€)</th>
-                          <th style="padding:6px 4px">Mjesečno (€)</th>
-                          <th style="padding:6px 4px">Δ vs best (€)</th>
-                        </tr>
-                      </thead>
-                      <tbody id="go-compare-body"></tbody>
-                    </table>
-                  </div>
                 </div>
-              </div>
-
-              <script>
-                (function(){
-                  const hr=new Intl.NumberFormat('hr-HR',{maximumFractionDigits:0});
-                  const events=document.getElementById('go-events');
-                  const eventsOut=document.getElementById('go-events-out');
-                  const subFee=document.getElementById('go-sub-fee');
-                  const perPrice=document.getElementById('go-per-price');
-                  const adhoc=document.getElementById('go-adhoc');
-                  const monthOut=document.getElementById('go-month');
-                  const yearOut=document.getElementById('go-year');
-                  const subOut=document.getElementById('go-sub');
-                  const varOut=document.getElementById('go-var');
-                  const savings=document.getElementById('go-savings');
-                  const subRange=document.getElementById('go-sub-range');
-                  const perRange=document.getElementById('go-per-range');
-                  const planPills=document.querySelectorAll('.go-calc__pill');
-                  const suggest=document.getElementById('go-suggest');
-                  const resetBtn=document.getElementById('go-reset');
-
-                  // Pricing logic
-                  // Subscription by plan; variable dio računa se marginalno po ukupnom broju isporuka
-                  const plans={
-                    mini:{sub:[600,900], label:'Mini'},
-                    standard:{sub:[1200,2000], label:'Standard'},
-                    prosireni:{sub:[2500,4000], label:'Prošireni'}
-                  };
-                  // Marginal tiers per plan
-                  // Mini: sve po 150
-                  // Standard: 1–20 @150, 21+ @100
-                  // Prošireni: 1–20 @150, 21–30 @100, 31+ @70
-                  const tierSchedules={
-                    mini:[ {upto:Infinity, rate:150} ],
-                    standard:[ {upto:20, rate:150}, {upto:Infinity, rate:100} ],
-                    prosireni:[ {upto:20, rate:150}, {upto:30, rate:100}, {upto:Infinity, rate:70} ]
-                  };
-                  let active='mini';
-
-                  function clamp(v,[min,max]){return Math.min(max,Math.max(min,v));}
-                  function tween(node,to){
-                    // Respect reduced motion
-                    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                    if(reduce || !node){ node.textContent=hr.format(to); if(node) node.dataset.val=String(to); return; }
-                    const from=parseInt(node.dataset.val||'0',10);
-                    const start=performance.now();
-                    const dur=420; const ease=t=>1-Math.pow(1-t,4);
-                    const raf=now=>{
-                      const p=Math.min(1,(now-start)/dur);
-                      const val=Math.round(from+(to-from)*ease(p));
-                      node.textContent=hr.format(val);
-                      if(p<1) requestAnimationFrame(raf); else node.dataset.val=String(to);
-                    };
-                    requestAnimationFrame(raf);
-                  }
-
-                  function applyRanges(){
-                    const p=plans[active];
-                    if (subRange) subRange.textContent=\`\${p.label} \${p.sub[0]}–\${p.sub[1]}\`;
-                    // update marginal info label for active plan
-                    const sch=tierSchedules[active];
-                    const parts=[]; let last=0;
-                    for(const t of sch){
-                      const from=last+1; const to=(t.upto===Infinity?'∞':t.upto);
-                      parts.push(\`\${from}\${t.upto===Infinity?'':\`–\${to}\`}: \${t.rate}\`);
-                      last = (t.upto===Infinity? last : t.upto);
-                    }
-                    if (perRange) perRange.textContent=parts.join(' • ');
-                  }
-
-                  function marginalVariableCost(plan, n){
-                    if(!n) return 0;
-                    const sch=tierSchedules[plan];
-                    let remaining=n; let prev=0; let sum=0;
-                    for(const t of sch){
-                      const span=Math.min(remaining, t.upto===Infinity? remaining : (t.upto - prev));
-                      if(span>0){ sum += span * t.rate; remaining -= span; prev = (t.upto===Infinity? prev+span : t.upto); }
-                      if(remaining<=0) break;
-                    }
-                    return sum;
-                  }
-
-                  function marginalUnitAt(plan, n){
-                    if(n<=0) return 0;
-                    for(const t of tierSchedules[plan]){
-                      if(n<=t.upto) return t.rate;
-                    }
-                    const sch=tierSchedules[plan];
-                    return sch[sch.length-1].rate;
-                  }
-
-                  function pureCost(plan, n, sub){
-                    const s = (typeof sub==='number') ? sub : plans[plan].sub[0]; // default to min sub
-                    return s + marginalVariableCost(plan, n);
-                  }
-
-                  function costsFor(n){
-                    const order=['mini','standard','prosireni'];
-                    return order.map(p=>{
-                      const sub=plans[p].sub[0];
-                      const variable=marginalVariableCost(p, n);
-                      const total=sub + variable;
-                      return { plan:p, label:plans[p].label, sub, per:marginalUnitAt(p, Math.max(1,n)), n, total, monthly: Math.round(total/12) };
-                    }).sort((a,b)=>a.total-b.total);
-                  }
-
-                  function updateRecommendation(n){
-                    const list=costsFor(n);
-                    const best=list[0], runner=list[1];
-                    const diff=runner.total - best.total;
-                    const el=document.getElementById('go-reco');
-                    if (el) el.innerHTML = \`Preporuka: <strong>\${best.label}</strong> (ušteda ≈ <strong>\${hr.format(diff)}</strong> EUR/god u odnosu na \${runner.label}).\`;
-                  }
-
-                  function renderComparison(n){
-                    const tbody=document.getElementById('go-compare-body');
-                    if (!tbody) return;
-                    const list=costsFor(n);
-                    const bestTotal=list[0].total;
-                    const rows=list.map((r,i)=>{
-                      const strongOpen = i===0?'<strong>':''; const strongClose = i===0?'</strong>':'';
-                      const delta = r.total - bestTotal;
-                      return \`<tr style="border-bottom:1px dashed var(--color-border)">
-                        <td style="padding:6px 4px">\${strongOpen}\${r.label}\${strongClose}</td>
-                        <td style="padding:6px 4px">\${hr.format(r.sub)}</td>
-                        <td style="padding:6px 4px">\${hr.format(r.per)}</td>
-                        <td style="padding:6px 4px">\${hr.format(r.n)}</td>
-                        <td style="padding:6px 4px">\${hr.format(r.total)}</td>
-                        <td style="padding:6px 4px">\${hr.format(r.monthly)}</td>
-                        <td style="padding:6px 4px">\${i===0? '0' : hr.format(delta)}</td>
-                      </tr>\`;
-                    }).join('');
-                    tbody.innerHTML=rows;
-                  }
-
-                  function autoSelectPlanByThreshold(n){
-                    if(n<=20) return 'mini';
-                    if(n<=30) return 'standard';
-                    return 'prosireni';
-                  }
-
-                  function compute(){
-                    if (!events) return;
-                    const ev=parseInt(events.value||'0',10);
-                    // Auto select plan by threshold (<=20 Mini, 21–30 Standard, 31+ Prošireni)
-                    const best=autoSelectPlanByThreshold(ev);
-                    if(active!==best){
-                      active=best;
-                      planPills.forEach(b=>b.setAttribute('aria-pressed',b.dataset.plan===active?'true':'false'));
-                      applyRanges();
-                    }
-
-                    const sub=clamp(parseInt(subFee.value||'0',10),plans[active].sub);
-                    if (subFee) subFee.value=sub;
-                    // show current marginal unit price for the nth isporuka (ovisno o planu)
-                    if (perPrice) perPrice.value=marginalUnitAt(active, ev);
-                    if (eventsOut) eventsOut.textContent=ev;
-
-                    const variable=marginalVariableCost(active, ev);
-                    const annual=sub+variable;
-                    const monthly=Math.round(annual/12);
-                    tween(yearOut,annual);
-                    tween(monthOut,monthly);
-                    tween(subOut,sub);
-                    tween(varOut,variable);
-
-                    const ah=parseInt(adhoc.value||'0',10);
-                    const adhocAnnual=ev*ah;
-                    const diff=adhocAnnual-variable;
-                    const msg=diff>0?\`Ušteda približno \${hr.format(diff)} EUR godišnje.\` :diff<0?\`Ad-hoc povoljniji za manji broj isporuka (~ \${hr.format(Math.abs(diff))} EUR).\`:\`Jednako po zadanim vrijednostima.\`;
-                    if(savings) {
-                        savings.textContent=msg;
-                        savings.className='note '+(diff>0?'ok':diff<0?'warn':'info');
-                    }
-
-                    // Update recommendation & comparison
-                    updateRecommendation(ev);
-                    renderComparison(ev);
-                  }
-
-                  // Bindings
-                  planPills.forEach(btn=>btn.addEventListener('click',()=>{
-                    planPills.forEach(b=>b.setAttribute('aria-pressed','false'));
-                    btn.setAttribute('aria-pressed','true');
-                    active=btn.dataset.plan;
-                    applyRanges();
-                    compute();
-                    if(typeof updateURL==='function') updateURL();
-                  }));
-                  function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,a),ms); }; }
-                  // Deep-link support: reflect state in URL and hydrate from URL
-                  function getState(){
-                    return {
-                      ev: parseInt(events?.value||'0',10),
-                      p: active,
-                      sub: parseInt(subFee?.value||'0',10),
-                      ah: parseInt(adhoc?.value||'0',10),
-                    };
-                  }
-                  function updateURL(){
-                    const s=getState();
-                    const url=new URL(location.href);
-                    url.searchParams.set('n', String(s.ev));
-                    url.searchParams.set('p', s.p);
-                    url.searchParams.set('sub', String(s.sub));
-                    url.searchParams.set('ah', String(s.ah));
-                    history.replaceState(null,'',url.toString());
-                  }
-                  const updateURLDebounced=debounce(updateURL,150);
-                  const computeDebounced=debounce(compute,80);
-                  if (events) events.addEventListener('input',()=>{ computeDebounced(); updateURLDebounced(); });
-                  [subFee,adhoc].forEach(el=>{ if(el) el.addEventListener('input',()=>{ compute(); updateURLDebounced(); }); });
-
-                  // Suggest cheapest plan by actual total
-                  suggest?.addEventListener('click',e=>{
-                    e.preventDefault();
-                    if (!events) return;
-                    const ev=parseInt(events.value||'0',10);
-                    const best=costsFor(ev)[0];
-                    document.querySelector(\`.go-calc__pill[data-plan="\${best.plan}"]\`)?.click();
-                  });
-
-                  resetBtn?.addEventListener('click',()=>{
-                    active='mini';
-                    planPills.forEach(b=>b.setAttribute('aria-pressed',b.dataset.plan==='mini'?'true':'false'));
-                    if (events) events.value=12;
-                    if (subFee) subFee.value=900;
-                    if (perPrice) perPrice.value=marginalUnitAt('mini', 12);
-                    if (adhoc) adhoc.value=220;
-                    if (eventsOut) eventsOut.textContent='12';
-                    applyRanges();
-                    compute();
-                    updateURL();
-                  });
-
-                  // --- Lightweight tests (console only) ---
-                  (function tests(){
-                    try{
-                      console.assert(marginalVariableCost('mini',0)===0,'marginal 0');
-                      console.assert(marginalVariableCost('mini',12)===12*150,'mini 12');
-                      console.assert(marginalVariableCost('standard',25)===(20*150 + 5*100),'standard 25');
-                      console.assert(marginalVariableCost('prosireni',35)===(20*150 + 10*100 + 5*70),'prosireni 35');
-                      console.assert(pureCost('mini',12,900)===900 + marginalVariableCost('mini',12),'pureCost mini');
-                      console.assert(pureCost('standard',25,1200)===1200 + marginalVariableCost('standard',25),'pureCost standard');
-                      console.assert(pureCost('prosireni',35,2500)===2500 + marginalVariableCost('prosireni',35),'pureCost prošireni');
-                      console.assert(clamp(50,[0,40])===40,'clamp high');
-                      console.assert(clamp(-1,[0,40])===0,'clamp low');
-                      console.assert(marginalUnitAt('mini',25)===150 && marginalUnitAt('standard',25)===100 && marginalUnitAt('prosireni',35)===70,'marginal unit');
-                      const order25 = costsFor(25).map(x=>x.plan).join(',');
-                      console.assert(order25.includes('standard'),'order contains standard for 25 events');
-                      const list20 = costsFor(20); const d20 = list20[1].total - list20[0].total; console.assert(d20>=0,'delta non-negative');
-                      const order0 = costsFor(0).map(x=>x.plan).join(',');
-                      console.assert(order0==='mini,standard,prosireni','order for 0 events');
-                      active='standard'; applyRanges();
-                      if (subRange) console.assert(/Standard/.test(subRange.textContent),'applyRanges subRange Standard');
-                      active='prosireni'; applyRanges();
-                      if (subRange) console.assert(/Prošireni/.test(subRange.textContent),'applyRanges subRange Prošireni');
-                      if (suggest && events) {
-                        events.value=30; compute(); suggest.click();
-                        const pressed=[...planPills].find(b=>b.getAttribute('aria-pressed')==='true').dataset.plan;
-                        const best30=costsFor(30)[0].plan;
-                        console.assert(pressed===best30,'suggest picks best plan for 30');
-                      }
-                      if(events) {
-                        events.value=18; compute();
-                        const p18=[...planPills].find(b=>b.getAttribute('aria-pressed')==='true')?.dataset.plan;
-                        console.assert(p18==='mini','auto-switch selects mini at 18');
-                        events.value=25; compute();
-                        const p25=[...planPills].find(b=>b.getAttribute('aria-pressed')==='true')?.dataset.plan;
-                        console.assert(p25==='standard','auto-switch selects standard at 25');
-                        events.value=35; compute();
-                        const p35=[...planPills].find(b=>b.getAttribute('aria-pressed')==='true')?.dataset.plan;
-                        console.assert(p35==='prosireni','auto-switch selects prosireni at 35');
-                      }
-                      renderComparison(15);
-                      const tbody=document.getElementById('go-compare-body');
-                      console.assert(tbody && tbody.innerHTML.length>0,'comparison rows rendered');
-                      updateRecommendation(15);
-                      const reco=document.getElementById('go-reco');
-                      if(reco) console.assert(/Preporuka:/.test(reco.innerHTML),'recommendation rendered');
-                      console.info('✔ Kalkulator tests passed');
-                    }catch(e){ console.warn('Tests failed', e); }
-                  })();
-
-                  // Init
-                  (function initFromQuery(){
-                    try{
-                      const q=new URLSearchParams(location.search);
-                      const p=q.get('p'); if(p && plans[p]){ active=p; planPills.forEach(b=>b.setAttribute('aria-pressed',b.dataset.plan===active?'true':'false')); }
-                      if (events) {
-                          const n=Number(q.get('n')); if(Number.isFinite(n)){ const lo=parseInt(events.min||'0',10), hi=parseInt(events.max||'60',10); events.value=clamp(n,[lo,hi]); if (eventsOut) eventsOut.textContent=events.value; }
-                      }
-                      if (subFee) {
-                          const s=Number(q.get('sub')); if(Number.isFinite(s)){ subFee.value=clamp(s, plans[active].sub); }
-                      }
-                      if (adhoc) {
-                          const ah=Number(q.get('ah')); if(Number.isFinite(ah)){ adhoc.value=ah; }
-                      }
-                    }catch(e){ /* noop */ }
-                  })();
-                  applyRanges();
-                  compute();
-                  updateURL();
-                })();
-              </script>
-            </section>
+            </div>
+        </section>
 
             {/* ===== Sadržaj (mini TOC) + Sekcije ===== */}
             <section id="sadrzaj" class="section">
@@ -774,3 +459,5 @@ export default function PitchPage() {
     </>
   );
 }
+
+    
