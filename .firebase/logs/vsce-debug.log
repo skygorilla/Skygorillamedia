@@ -20,3 +20,5 @@ I1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 12
  {"metadata":{"emulator":{"name":"dataconnect"},"message":"I1101 18:13:41.496423     294 load.go:31] Reloading schema and connectors...\nE1101 18:13:41.513324     294 load.go:63] Could not generate extensions: rpc error: code = NotFound desc = no schema found for service \"glas-otoka-dataconnect\". No service has a schema.\nE1101 18:13:41.513400     294 load.go:73] Could not load sources: \nErrors: schema/schema.gql:2:6: Cannot redeclare type Query.\nI1101 18:13:41.524203     294 collector.go:107] schema extensions wrote into \"/home/user/studio/dataconnect/.dataconnect/schema\"\nGenerated sources: prelude.gql [73219B] \nI1101 18:13:41.526307     294 load.go:74] Finished reloading\nI1101 18:13:41.548942     294 dev.go:102] Listening on address (HTTP + gRPC): 127.0.0.1:50001\n"}}
 [error] [Firebase Plugin] error:  {}
 [error] [Firebase Plugin] requireAuth error: n.split is not a function
+[info] [Firebase Plugin] Stopping Data Connect toolkit
+[warn] ⚠  Data Connect Emulator has exited upon receiving signal: SIGINT 
