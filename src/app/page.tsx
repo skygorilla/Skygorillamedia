@@ -13,9 +13,7 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   
   const headerElementRef = (node: HTMLElement | null) => {
-    if (node) {
-      headerRef.current = node;
-    }
+    headerRef.current = node;
   };
 
   useEffect(() => {
@@ -77,15 +75,13 @@ export default function Home() {
   return (
     <>
       <Header ref={headerElementRef} />
-      <main>
-        <HeroSection heroRef={heroRef} navRef={navRef} />
-        <section className="section go-calc" id="go-calc">
-          <div className="container">
-            <Calculator />
-          </div>
-        </section>
-        <div className="content"></div>
-      </main>
+      <HeroSection heroRef={heroRef} navRef={navRef} />
+      <section className="section go-calc" id="go-calc">
+        <div className="container">
+          <Calculator />
+        </div>
+      </section>
+      <div className="content"></div>
     </>
   );
 }
