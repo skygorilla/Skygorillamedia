@@ -123,12 +123,12 @@
 .network-header .container { max-width: 1200px; height: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 16px; position: relative; }
 
 /* Gear icon in navigation */
-.menu a[href="/sitemap"] {
+.menu a[href="/site-map"] {
   padding: 0 8px;
   min-width: 30px;
 }
 
-.menu a[href="/sitemap"]:hover {
+.menu a[href="/site-map"]:hover {
   background: #6b7280;
   color: #fff;
   height: 20px;
@@ -136,7 +136,7 @@
   z-index: 5;
 }
 
-.menu a[href="/sitemap"].active {
+.menu a[href="/site-map"].active {
   background: #6b7280;
   color: #fff;
   height: 20px;

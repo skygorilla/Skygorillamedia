@@ -49,9 +49,9 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
               ))}
               <li role="none">
                 <Link
-                  href="/sitemap"
+                  href="/site-map"
                   role="menuitem"
-                  className={isActiveRoute('/sitemap') ? 'active' : ''}
+                  className={isActiveRoute('/site-map') ? 'active' : ''}
                   tabIndex={0}
                 >
                   <Settings className="h-3 w-3" />
