@@ -126,14 +126,45 @@
 .menu a {
     display: flex; align-items: center; justify-content: center; color: #b9bcbd; font-size: 11px; font-weight: 700;
     letter-spacing: .5px; text-decoration: none; text-transform: uppercase; text-shadow: 0 1px 1px rgba(0,0,0,.75);
-    transition: color .2s ease, background .2s ease; padding: 0 12px; height: 30px; margin: 5px 0; border-radius: 4px; background: transparent;
+    transition: all .3s ease; padding: 0 12px; height: 30px; margin: 5px 0; border-radius: 4px; background: transparent;
+    position: relative; z-index: 1;
 }
-.menu a.active {
+
+/* Glas Otoka - Main Logo */
+.menu a[href="/pitch"] {
     background: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
     height: 40px; margin: 0; border-radius: 0;
+    z-index: 10;
 }
-.menu li:not(:nth-child(4)) a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+/* Other nav items - 3D layered effect */
+.menu a:not([href="/pitch"]):hover {
+    height: 35px;
+    margin: 2.5px 0;
+    z-index: 2;
+}
+
+.menu a[href="/"]:hover { background: #4CAF50; color: #fff; }
+.menu a[href="/pretplate"]:hover { background: #2196F3; color: #fff; }
+.menu a[href="/politika"]:hover { background: #FF9800; color: #fff; }
+.menu a[href="/kultura"]:hover { background: #9C27B0; color: #fff; }
+.menu a[href="/sport"]:hover { background: #00BCD4; color: #fff; }
+.menu a[href="/kontakt"]:hover { background: #795548; color: #fff; }
+
+/* Active states */
+.menu a.active:not([href="/pitch"]) {
+    height: 35px;
+    margin: 2.5px 0;
+    z-index: 5;
+}
+
+.menu a[href="/"].active { background: #4CAF50; color: #fff; }
+.menu a[href="/pretplate"].active { background: #2196F3; color: #fff; }
+.menu a[href="/politika"].active { background: #FF9800; color: #fff; }
+.menu a[href="/kultura"].active { background: #9C27B0; color: #fff; }
+.menu a[href="/sport"].active { background: #00BCD4; color: #fff; }
+.menu a[href="/kontakt"].active { background: #795548; color: #fff; }
 
 .section { padding: 64px 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
