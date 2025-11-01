@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
-        <ErrorBoundary fallback={<div className="error-fallback">Something went wrong. Please refresh the page.</div>}>
+        <ErrorBoundary>
           <DevNav />
           <HealthNotification />
           <ErrorNotification />
