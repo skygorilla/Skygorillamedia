@@ -5,6 +5,8 @@
 // performance overhead of a component-based React architecture for this specific,
 // static-heavy page.
 
+import Calculator from "@/components/calculator";
+
 export default function PitchPage() {
   return (
     <>
@@ -314,86 +316,12 @@ export default function PitchPage() {
 
           {/* ================= MAIN ================= */}
           <main>
-            <!-- ===== Calculator ===== -->
-            <section class="go-calc section" id="go-calculator" aria-labelledby="calc-title">
-            <div class="container go-calc__wrap">
-                <div class="go-calc__card go-calc__card--modern">
-                    <div class="go-calc__header">
-                        <div class="go-calc__icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 4 16.25" /><path d="M4 15.25V18" /><path d="M4.75 17.25H6.5" /><path d="M9 10a1 1 0 1 0 2 0 1 1 0 0 0-2 0" /><path d="M15 10a1 1 0 1 0 2 0 1 1 0 0 0-2 0" /><path d="M16 15s-2-3-4-3-4 3-4 3" /></svg>
-                        </div>
-                        <div>
-                            <h2 id="calc-title" class="go-calc__title">Kalkulator Pretplate</h2>
-                            <p class="go-calc__subtitle">Pronađite idealnu pretplatu za vaše potrebe</p>
-                        </div>
-                    </div>
-                    <div class="go-calc__step">
-                        <div class="go-calc__step-header">
-                            <span class="go-calc__step-number">1</span>
-                            <h3>Odaberite približan volumen</h3>
-                        </div>
-                        <div class="go-calc__plan go-calc__plan--modern" role="group" aria-label="Odabir paketa">
-                            <button class="go-calc__pill go-calc__pill--modern" data-plan="mini" aria-pressed="true" type="button"><span class="go-calc__pill-label">Mini</span><span class="go-calc__pill-range">1-10</span></button>
-                            <button class="go-calc__pill go-calc__pill--modern" data-plan="standard" aria-pressed="false" type="button"><span class="go-calc__pill-label">Standard</span><span class="go-calc__pill-range">11-40</span></button>
-                            <button class="go-calc__pill go-calc__pill--modern" data-plan="partner" aria-pressed="false" type="button"><span class="go-calc__pill-label">Partner</span><span class="go-calc__pill-range">41-80</span></button>
-                        </div>
-                    </div>
-                    <div class="go-calc__step">
-                        <div class="go-calc__step-header">
-                            <span class="go-calc__step-number">2</span>
-                            <h3>Precizno podešavanje</h3>
-                        </div>
-                        <div class="go-calc__inputs">
-                            <div class="go-calc__input-group">
-                                <label for="go-events" class="go-calc__label">
-                                    <span>Broj isporuka godišnje</span>
-                                    <div class="go-calc__value"><span id="go-events-out" class="go-calc__value-number">12</span><span class="go-calc__value-unit">isporuka</span></div>
-                                </label>
-                                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" class="go-calc__slider" />
-                            </div>
-                            <div class="go-calc__input-group go-calc__input-group--secondary">
-                                <label for="go-adhoc" class="go-calc__label go-calc__label--small">Ad-hoc cijena (€/isporuka)</label>
-                                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" class="go-calc__input" min="1" max="1000" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="go-calc__actions">
-                        <button class="go-calc__btn go-calc__btn--secondary" id="go-reset" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6" /><path d="M21 12A9 9 0 0 0 6 5.3L3 8" /><path d="M21 22v-6h-6" /><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" /></svg>Resetiraj</button>
-                        <button class="go-calc__btn go-calc__btn--primary" type="button" onClick="document.getElementById('go-calculator').scrollIntoView({ behavior: 'smooth', block: 'center' })"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18" /><path d="m19 9-5 5-4-4-3 3" /></svg>Izračunaj</button>
-                    </div>
-                </div>
-                <div class="go-calc__card go-calc__card--results" aria-live="polite">
-                    <div class="go-calc__results-header">
-                        <div class="go-calc__results-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.4 16.4c-1.37 2.1-3.68 3.6-6.4 3.6-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9" /><path d="M12 2v4" /><path d="m16.2 7.8 2.1-2.1" /><path d="M22 12h-4" /><path d="m7.8 16.2-2.1 2.1" /><path d="M12 12.5a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-5 0" /><path d="M12 20a8 8 0 0 0 8-8" /><path d="m17 17 5 5" /></svg>
-                        </div>
-                        <h2 class="go-calc__results-title">Vaš rezultat</h2>
-                    </div>
-                    <div class="go-calc__summary">
-                        <div class="go-calc__summary-main">
-                            <div class="go-calc__summary-amount"><span id="go-year" class="go-calc__amount">0</span><span class="go-calc__currency">€</span></div>
-                            <div class="go-calc__summary-period">godišnje</div>
-                        </div>
-                        <div class="go-calc__summary-monthly"><span id="go-month" class="go-calc__monthly-amount">0</span><span class="go-calc__monthly-label">€/mjesec</span></div>
-                    </div>
-                    <div class="go-calc__breakdown">
-                        <div class="go-calc__breakdown-item"><span class="go-calc__breakdown-label">Fiksni dio</span><span class="go-calc__breakdown-value"><span id="go-sub">0</span> €</span></div>
-                        <div class="go-calc__breakdown-item"><span class="go-calc__breakdown-label">Varijabilni dio</span><span class="go-calc__breakdown-value"><span id="go-var">0</span> €</span></div>
-                    </div>
-                    <div class="go-calc__savings" id="go-savings"></div>
-                    <div class="go-calc__recommendation" id="go-reco"></div>
-                    <div class="go-calc__plans">
-                        <h3 class="go-calc__plans-title">Svi paketi</h3>
-                        <div class="go-calc__plan-cards">
-                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="mini"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v4" /><path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4" /><path d="M12 12V6" /><path d="M12 18v-6" /></svg><span class="go-calc__plan-name">Mini</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">1-10 isporuka</div><div class="go-calc__plan-formula">600€ + 250€/isporuka</div></div></div>
-                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="standard"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m20 12-1.35-1.69a2.5 2.5 0 0 0-4.3 0L12 12" /><path d="m4 12 1.35-1.69a2.5 2.5 0 0 1 4.3 0L12 12" /><path d="M20 12v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4" /><path d="M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /><path d="M12 12v10" /></svg><span class="go-calc__plan-name">Standard</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">11-40 isporuka</div><div class="go-calc__plan-formula">1.800€ + 210€/isporuka</div></div></div>
-                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="partner"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg><span class="go-calc__plan-name">Partner</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">41-80 isporuka</div><div class="go-calc__plan-formula">3.600€ + 180€/isporuka</div></div></div>
-                            <div class="go-calc__plan-card go-calc__plan-card--modern" data-plan-card="otokplus" style="display: none;"><span class="go-calc__plan-badge">Preporučeno</span><div class="go-calc__plan-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg><span class="go-calc__plan-name">Otok+</span></div><div class="go-calc__plan-price"><span data-total="" class="go-calc__plan-amount">0</span><span class="go-calc__plan-currency">€</span></div><div class="go-calc__plan-period"><span data-monthly="">0</span> €/mjesec</div><div class="go-calc__plan-details"><div class="go-calc__plan-range">81-120 isporuka</div><div class="go-calc__plan-formula">6.000€ + 150€/isporuka</div></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <!-- ===== Calculator Section ===== -->
+             <section class="go-calc section" id="go-calculator">
+              <div class="container">
+                <Calculator />
+              </div>
+            </section>
 
             {/* ===== Sadržaj (mini TOC) + Sekcije ===== */}
             <section id="sadrzaj" class="section">
@@ -454,10 +382,7 @@ export default function PitchPage() {
           </main>
         </body>
         </html>
-      `}}
-      />
+      `}} />
     </>
   );
 }
-
-    

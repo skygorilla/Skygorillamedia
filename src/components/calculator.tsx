@@ -41,8 +41,7 @@ const calculateCosts = (planKey: Plan, n: number) => {
 export default function Calculator() {
   const [events, setEvents] = useState(12);
   const [adhocPrice, setAdhocPrice] = useState(250);
-  const [activePlan, setActivePlan] = useState<Plan>('mini');
-
+  
   const recommendedPlan = useMemo(() => getPlanByVolume(events), [events]);
   const costs = useMemo(() => calculateCosts(recommendedPlan, events), [recommendedPlan, events]);
 
@@ -51,16 +50,9 @@ export default function Calculator() {
     return adhocTotal - costs.total;
   }, [events, adhocPrice, costs.total]);
 
-  const handlePlanChange = (plan: Plan) => {
-    setActivePlan(plan);
-    const targetVolume = packages[plan].volume[0];
-    setEvents(targetVolume);
-  };
-
   const handleReset = () => {
     setEvents(12);
     setAdhocPrice(250);
-    setActivePlan('mini');
   };
   
   const allPlansCost = useMemo(() => {
@@ -90,8 +82,11 @@ export default function Calculator() {
               <h3>Odaberite paket</h3>
             </div>
             <RadioGroup
-              value={activePlan}
-              onValueChange={(value) => handlePlanChange(value as Plan)}
+              value={recommendedPlan}
+              onValueChange={(value) => {
+                const newPlan = value as Plan;
+                setEvents(packages[newPlan].volume[0]);
+              }}
               className="grid grid-cols-2 lg:grid-cols-4 gap-2"
             >
               {(Object.keys(packages) as Plan[]).map((plan) => (
@@ -99,7 +94,7 @@ export default function Calculator() {
                   <RadioGroupItem value={plan} id={plan} className="sr-only" />
                   <Label
                     htmlFor={plan}
-                    className={`flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground ${activePlan === plan ? 'border-primary' : ''}`}
+                    className={`flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer ${recommendedPlan === plan ? 'border-primary' : ''}`}
                   >
                     {packages[plan].label}
                     <span className="text-xs text-muted-foreground">{`${packages[plan].volume[0]}-${packages[plan].volume[1]} isporuka`}</span>
