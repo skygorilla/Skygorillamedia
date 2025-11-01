@@ -47,14 +47,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
-        pathname: '/400x300/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/photo-*',
       }
     ],
     dangerouslyAllowSVG: false,
