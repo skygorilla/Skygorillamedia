@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Header from '@/components/layout/header';
 import Calculator from '@/components/calculator';
 import HeroSection from '@/components/hero-section';
 
 export default function Home() {
-
-
   const heroRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -59,18 +57,21 @@ export default function Home() {
     };
 
     const init = () => {
-      triggerY = computeTriggerY();
-      updateOnScroll();
+      try {
+        triggerY = computeTriggerY();
+        updateOnScroll();
+      } catch(e) {
+        console.error("Initialization error in scroll effect", e);
+      }
     };
     
-    const timeoutId = setTimeout(init, 100);
+    init();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', init);
     
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', init);
-      clearTimeout(timeoutId);
     };
   }, []);
 
