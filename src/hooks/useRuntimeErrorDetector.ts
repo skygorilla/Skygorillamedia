@@ -16,26 +16,36 @@ export const useRuntimeErrorDetector = () => {
 
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
-      const error: RuntimeError = {
-        id: `runtime-${Date.now()}`,
-        message: event.message,
-        stack: event.error?.stack,
-        component: extractComponent(event.error?.stack),
-        autoFixable: isAutoFixable(event.message),
-        fix: getAutoFix(event.message)
-      };
-      
-      setErrors(prev => [...prev.slice(-9), error]);
+      try {
+        const sanitizedMessage = event.message?.replace(/[<>"'&]/g, '') || 'Unknown error';
+        const error: RuntimeError = {
+          id: `runtime-${Date.now()}`,
+          message: sanitizedMessage,
+          stack: event.error?.stack,
+          component: extractComponent(event.error?.stack),
+          autoFixable: isAutoFixable(sanitizedMessage),
+          fix: getAutoFix(sanitizedMessage)
+        };
+        
+        setErrors(prev => [...prev.slice(-9), error]);
+      } catch (err) {
+        console.error('Error handler failed:', { error: err instanceof Error ? err.message : 'Unknown error' });
+      }
     };
 
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      const error: RuntimeError = {
-        id: `promise-${Date.now()}`,
-        message: `Promise rejected: ${event.reason}`,
-        autoFixable: false
-      };
-      
-      setErrors(prev => [...prev.slice(-9), error]);
+      try {
+        const sanitizedReason = String(event.reason).replace(/[<>"'&]/g, '');
+        const error: RuntimeError = {
+          id: `promise-${Date.now()}`,
+          message: `Promise rejected: ${sanitizedReason}`,
+          autoFixable: false
+        };
+        
+        setErrors(prev => [...prev.slice(-9), error]);
+      } catch (err) {
+        console.error('Promise rejection handler failed:', { error: err instanceof Error ? err.message : 'Unknown error' });
+      }
     };
 
     window.addEventListener('error', handleError);
@@ -65,8 +75,19 @@ function isAutoFixable(message: string): boolean {
 }
 
 function getAutoFix(message: string): (() => void) | undefined {
-  if (message.includes('Cannot read properties')) {
-    return () => window.location.reload();
+  try {
+    if (message.includes('Cannot read properties')) {
+      return () => {
+        try {
+          window.location.reload();
+        } catch (err) {
+          console.error('Auto-fix failed:', err);
+        }
+      };
+    }
+    return undefined;
+  } catch (err) {
+    console.error('Get auto-fix failed:', { error: err instanceof Error ? err.message : 'Unknown error' });
+    return undefined;
   }
-  return undefined;
 }

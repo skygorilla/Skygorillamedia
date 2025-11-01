@@ -46,3 +46,5 @@ When proposing, generating, or reviewing code, **always** enforce:
 - Explain trade-offs if you pick a non-default pattern.
 
 If a user request conflicts with these rules, warn and propose a safe alternative before proceeding.
+
+**Trigger: Use `*` to enforce all rules if drifting.**

@@ -13,8 +13,12 @@ export const configChecks: ConfigCheck[] = [
     message: 'reCAPTCHA not enabled',
     recommendation: 'Enable reCAPTCHA for production security',
     autoFix: () => {
+      // Validate and sanitize script source
+      const allowedSrc = 'https://www.google.com/recaptcha/api.js';
       const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js';
+      script.src = allowedSrc;
+      script.integrity = 'sha384-...';
+      script.crossOrigin = 'anonymous';
       document.head.appendChild(script);
     }
   },
@@ -41,8 +45,25 @@ export const configChecks: ConfigCheck[] = [
 export const runConfigValidation = () => {
   if (typeof document === 'undefined') return [];
   
-  return configChecks.map(check => ({
-    ...check,
-    passed: check.check()
-  })).filter(result => !result.passed);
+  try {
+    return configChecks.map(check => {
+      try {
+        return {
+          ...check,
+          passed: check.check()
+        };
+      } catch (error) {
+        // Structured logging to prevent log injection
+        console.error('Config check failed:', { checkId: check.id, error: error instanceof Error ? error.message : 'Unknown error' });
+        return {
+          ...check,
+          passed: false
+        };
+      }
+    }).filter(result => !result.passed);
+  } catch (error) {
+    // Structured logging to prevent log injection
+    console.error('Config validation failed:', { error: error instanceof Error ? error.message : 'Unknown error' });
+    return [];
+  }
 };

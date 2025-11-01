@@ -30,8 +30,8 @@ export default function HeroSection({ navRef, heroRef }: HeroSectionProps) {
         <p className="hero-subtitle">Strateški i operativni model za kontinuitet lokalnih priča, događaja i streamova Korčule, Mljeta, Lastova i Pelješca.</p>
         
         <div className="hero-buttons">
-          <button className="btn primary">Izračunaj plan</button>
-          <button className="btn outline">Pretplatnički modeli</button>
+          <button className="btn primary" onClick={() => document.getElementById('go-calc')?.scrollIntoView()} aria-label="Calculate subscription plan">Izračunaj plan</button>
+          <button className="btn outline" onClick={() => window.open('/plans', '_blank')} aria-label="View subscription models">Pretplatnički modeli</button>
         </div>
       </div>
       <nav className="red-nav" id="morphNav" aria-label="Glas Otoka - traka" ref={navRef}>Glas Otoka</nav>

@@ -23,8 +23,13 @@ export const useBreakpoints = () => {
     
     setBreakpoints(prev => [...prev, breakpoint]);
     
-    // Simulate breakpoint hit (in real implementation, this would integrate with source maps)
-    console.log(`Breakpoint set at ${file}:${line}`);
+    // Log breakpoint creation with structured logging
+    console.log(JSON.stringify({
+      event: 'breakpoint_set',
+      file: file.replace(/[<>"'&]/g, ''),
+      line,
+      timestamp: new Date().toISOString()
+    }));
   };
 
   const removeBreakpoint = (id: string) => {
@@ -46,19 +51,31 @@ export const useBreakpoints = () => {
   // Simulate debugger controls
   const resume = () => {
     setPaused(false);
-    console.log('Execution resumed');
+    console.log(JSON.stringify({
+      event: 'debugger_resumed',
+      timestamp: new Date().toISOString()
+    }));
   };
 
   const stepOver = () => {
-    console.log('Step over');
+    console.log(JSON.stringify({
+      event: 'debugger_step_over',
+      timestamp: new Date().toISOString()
+    }));
   };
 
   const stepInto = () => {
-    console.log('Step into');
+    console.log(JSON.stringify({
+      event: 'debugger_step_into',
+      timestamp: new Date().toISOString()
+    }));
   };
 
   const stepOut = () => {
-    console.log('Step out');
+    console.log(JSON.stringify({
+      event: 'debugger_step_out',
+      timestamp: new Date().toISOString()
+    }));
   };
 
   return {

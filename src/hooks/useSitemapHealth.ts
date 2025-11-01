@@ -22,20 +22,33 @@ export const useSitemapHealth = () => {
   const [runtimeErrors, setRuntimeErrors] = useState<string[]>([]);
 
   const checkRoute = useCallback(async (route: string): Promise<boolean> => {
+    // Validate route to prevent SSRF
+    if (!route.startsWith('/') || route.includes('..') || route.includes('//')) {
+      throw new Error('Invalid route format');
+    }
+    
     const cached = cache.get(route);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
       return cached.result;
     }
 
     try {
-      const response = await fetch(route, { 
+      // Only allow same-origin requests
+      const url = new URL(route, window.location.origin);
+      if (url.origin !== window.location.origin) {
+        throw new Error('Cross-origin requests not allowed');
+      }
+      
+      const response = await fetch(url.href, { 
         method: 'HEAD',
         signal: AbortSignal.timeout(5000)
       });
       const result = response.status !== 404;
       cache.set(route, { result, timestamp: Date.now() });
       return result;
-    } catch {
+    } catch (error) {
+      // Structured logging to prevent log injection
+      console.error('Route check failed:', { route, error: error instanceof Error ? error.message : 'Unknown error' });
       cache.set(route, { result: false, timestamp: Date.now() });
       return false;
     }
@@ -129,7 +142,13 @@ export const useSitemapHealth = () => {
   // Monitor runtime errors
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
-      setRuntimeErrors(prev => [...prev.slice(-4), event.message]);
+      try {
+        // Sanitize error message to prevent log injection
+        const sanitizedMessage = event.message?.replace(/[<>"'&]/g, '') || 'Unknown error';
+        setRuntimeErrors(prev => [...prev.slice(-4), sanitizedMessage]);
+      } catch (err) {
+        console.error('Error handler failed:', { error: err instanceof Error ? err.message : 'Unknown error' });
+      }
     };
     
     window.addEventListener('error', handleError);
@@ -137,8 +156,13 @@ export const useSitemapHealth = () => {
   }, []);
 
   useEffect(() => {
+    // Skip sitemap scanning in development to prevent timeout errors
+    if (process.env.NODE_ENV === 'development') {
+      return;
+    }
+    
     scanSitemap();
-    const interval = setInterval(scanSitemap, 300000); // Check every 5 minutes
+    const interval = setInterval(scanSitemap, 300000);
     return () => {
       clearInterval(interval);
       cache.clear();
@@ -152,7 +176,7 @@ function detectConfigIssues(): SitemapIssue[] {
   const { runConfigValidation } = require('@/utils/configValidator');
   const failedChecks = runConfigValidation();
   
-  return failedChecks.map(check => ({
+  return failedChecks.map((check: any) => ({
     id: check.id,
     type: check.id.includes('recaptcha') ? 'security' : 
           check.id.includes('firebase') ? 'config' : 

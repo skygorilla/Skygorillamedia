@@ -27,7 +27,7 @@ export default function Calculator() {
     let active = 'mini';
 
     function tween(node: HTMLElement | null, to: number) {
-      if (!node) return;
+      if (!node || typeof to !== 'number' || !isFinite(to)) return;
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduce) {
         node.textContent = hr.format(to);
@@ -98,7 +98,10 @@ export default function Calculator() {
 
 
     function compute() {
-      if (!events || !eventsOut || !yearOut || !monthOut || !subOut || !varOut || !savings) return;
+      try {
+        if (!events || !eventsOut || !yearOut || !monthOut || !subOut || !varOut || !savings) {
+          throw new Error('Required DOM elements not found');
+        }
 
       const ev = parseInt(events.value || '0', 10);
       const currentPlanKey = getPlanByVolume(ev);
@@ -124,13 +127,16 @@ export default function Calculator() {
       const recoEl = document.getElementById('go-reco');
       if (recoEl) {
           if(ev > 120) {
-            recoEl.innerHTML = `Za više od 120 događaja, <a href="#kontakt" class="font-bold">kontaktirajte nas</a> za prilagođenu ponudu.`;
+            recoEl.textContent = 'Za više od 120 događaja, kontaktirajte nas za prilagođenu ponudu.';
           } else {
-            recoEl.innerHTML = `Preporučeni paket za ${ev} isporuka je <strong>${packages[active as keyof typeof packages].label}</strong>.`;
+            recoEl.textContent = `Preporučeni paket za ${ev} isporuka je ${packages[active as keyof typeof packages].label}.`;
           }
       }
       
       updateCards(ev);
+      } catch (error) {
+        console.error('Calculator computation failed:', error);
+      }
     }
     
     planPills.forEach(btn => btn.addEventListener('click', () => {
@@ -172,9 +178,9 @@ export default function Calculator() {
           <p className="go-calc__muted">Unesite očekivani broj isporuka godišnje za automatsku preporuku paketa.</p>
 
           <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
-              <button className="go-calc__pill" data-plan="mini" aria-pressed="true">Mini</button>
-              <button className="go-calc__pill" data-plan="standard" aria-pressed="false">Standard</button>
-              <button className="go-calc__pill" data-plan="partner" aria-pressed="false">Partner</button>
+              <button className="go-calc__pill" data-plan="mini" aria-pressed="true" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Mini</button>
+              <button className="go-calc__pill" data-plan="standard" aria-pressed="false" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Standard</button>
+              <button className="go-calc__pill" data-plan="partner" aria-pressed="false" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Partner</button>
           </div>
 
           <div className="go-calc__row mt-4">
@@ -195,7 +201,7 @@ export default function Calculator() {
           </div>
           
           <div className="go-calc__cta">
-            <button className="btn outline" id="go-reset" type="button">Reset</button>
+            <button className="btn outline" id="go-reset" type="button" onClick={() => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); document.querySelector('[data-plan="mini"]')?.setAttribute('aria-pressed', 'true'); }}>Reset</button>
           </div>
 
           <p className="muted">Pretplata pokriva planiranje, arhivu i koordinaciju; svaka isporuka se fakturira po definiranoj cijeni paketa.</p>

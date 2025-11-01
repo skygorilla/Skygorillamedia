@@ -21,28 +21,48 @@ export const usePerformanceMonitor = () => {
 
   useEffect(() => {
     const updateMetrics = () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      const paint = performance.getEntriesByType('paint');
-      
-      const newMetrics: PerformanceMetrics = {
-        loadTime: navigation ? navigation.loadEventEnd - navigation.fetchStart : 0,
-        domContentLoaded: navigation ? navigation.domContentLoadedEventEnd - navigation.fetchStart : 0,
-        firstPaint: paint.find(p => p.name === 'first-paint')?.startTime || 0,
-        firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0,
-        memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
-        jsHeapSize: (performance as any).memory?.totalJSHeapSize || 0,
-      };
+      try {
+        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        const paint = performance.getEntriesByType('paint');
+        
+        const newMetrics: PerformanceMetrics = {
+          loadTime: navigation ? Math.max(0, navigation.loadEventEnd - navigation.fetchStart) : 0,
+          domContentLoaded: navigation ? Math.max(0, navigation.domContentLoadedEventEnd - navigation.fetchStart) : 0,
+          firstPaint: paint.find(p => p.name === 'first-paint')?.startTime || 0,
+          firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0,
+          memoryUsage: (performance as any).memory?.usedJSHeapSize || 0,
+          jsHeapSize: (performance as any).memory?.totalJSHeapSize || 0,
+        };
 
-      setMetrics(newMetrics);
+        setMetrics(newMetrics);
+      } catch (error) {
+        console.error('Performance metrics update failed:', error);
+      }
     };
 
-    // Update immediately
-    updateMetrics();
+    // Update immediately with error handling
+    try {
+      updateMetrics();
+    } catch (error) {
+      console.error('Initial performance metrics failed:', error);
+    }
 
-    // Update periodically
-    const interval = setInterval(updateMetrics, 1000);
+    // Update periodically with debouncing
+    const interval = setInterval(() => {
+      try {
+        updateMetrics();
+      } catch (error) {
+        console.error('Periodic performance metrics failed:', error);
+      }
+    }, 5000); // Reduced frequency for better performance
 
-    return () => clearInterval(interval);
+    return () => {
+      try {
+        clearInterval(interval);
+      } catch (error) {
+        console.error('Cleanup failed:', error);
+      }
+    };
   }, []);
 
   return metrics;

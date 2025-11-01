@@ -5,6 +5,7 @@ import { HealthNotification } from '@/components/ui/health-notification';
 import { ErrorNotification } from '@/components/ui/error-notification';
 import { ErrorBadge } from '@/components/ui/error-badge';
 import { ConfigFixer } from '@/components/ui/config-fixer';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-montserrat' })
@@ -23,12 +24,14 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
-        <HealthNotification />
-        <ErrorNotification />
-        <ErrorBadge />
-        <ConfigFixer />
-        <Breadcrumbs />
-        <main id="main">{children}</main>
+        <ErrorBoundary fallback={<div className="error-fallback">Something went wrong. Please refresh the page.</div>}>
+          <HealthNotification />
+          <ErrorNotification />
+          <ErrorBadge />
+          <ConfigFixer />
+          <Breadcrumbs />
+          <main id="main">{children}</main>
+        </ErrorBoundary>
       </body>
     </html>
   );
