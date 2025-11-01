@@ -33,7 +33,7 @@ export function HealthNotification() {
     [issues, dismissed]
   );
   
-  if (visibleIssues.length === 0) return null;
+  if (visibleIssues.length === 0 || process.env.NODE_ENV === 'production') return null;
 
   return (
     <div className="sg-health-notification" role="region" aria-label="Site health notifications">

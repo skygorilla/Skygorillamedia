@@ -5,7 +5,7 @@ import { useErrorDetector } from '@/hooks/useErrorDetector';
 export function ErrorBadge() {
   const { errors, count, ssrErrors, apiErrors, configIssues, hydrationErrors, reactErrors, recommendations } = useErrorDetector();
 
-  if (count === 0) return null;
+  if (count === 0 || process.env.NODE_ENV === 'production') return null;
 
   return (
     <div className="error-badge">

@@ -24,10 +24,14 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
         <ErrorBoundary>
-          <HealthNotification />
-          <ErrorNotification />
-          <ErrorBadge />
-          <ConfigFixer />
+          {process.env.NODE_ENV === 'development' && (
+            <>
+              <HealthNotification />
+              <ErrorNotification />
+              <ErrorBadge />
+              <ConfigFixer />
+            </>
+          )}
           <main id="main">{children}</main>
         </ErrorBoundary>
       </body>

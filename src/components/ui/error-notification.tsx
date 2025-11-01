@@ -6,7 +6,7 @@ import { useRuntimeErrorDetector } from '@/hooks/useRuntimeErrorDetector';
 export function ErrorNotification() {
   const { errors, clearErrors } = useRuntimeErrorDetector();
 
-  if (errors.length === 0) return null;
+  if (errors.length === 0 || process.env.NODE_ENV === 'production') return null;
 
   const handleAutoFix = (error: any) => {
     if (error.fix) {

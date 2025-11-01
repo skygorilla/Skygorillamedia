@@ -32,7 +32,7 @@ export function ConfigFixer() {
     }
   };
 
-  if (!mounted || issues.length === 0) return null;
+  if (!mounted || issues.length === 0 || process.env.NODE_ENV === 'production') return null;
 
   return (
     <div className="config-fixer">
