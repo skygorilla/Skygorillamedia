@@ -78,13 +78,15 @@ export default function Home() {
   return (
     <>
       <Header ref={headerElementRef} />
-      <HeroSection heroRef={heroRef} navRef={navRef} />
-      <section className="section go-calc" id="go-calc">
-        <div className="container">
-          <Calculator />
-        </div>
-      </section>
-      <div className="content"></div>
+      <main id="main">
+        <HeroSection heroRef={heroRef} navRef={navRef} />
+        <section className="section go-calc" id="go-calc">
+          <div className="container">
+            <Calculator />
+          </div>
+        </section>
+        <div className="content"></div>
+      </main>
     </>
   );
 }

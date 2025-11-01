@@ -2,13 +2,12 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   typescript: {
-    ignoreBuildErrors: false, // Enable TypeScript checking
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: false, // Enable ESLint checking
+    ignoreDuringBuilds: false,
   },
   
-  // Security headers
   async headers() {
     try {
       return [
@@ -16,23 +15,17 @@ const nextConfig: NextConfig = {
           source: '/(.*)',
           headers: [
             {
-              key: 'X-Frame-Options',
-              value: process.env.NODE_ENV === 'development' ? 'ALLOWALL' : 'DENY',
+              key: 'X-Content-Type-Options',
+              value: 'nosniff',
             },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: process.env.NODE_ENV === 'development' 
-              ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors *;"
-              : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none';",
-          },
+            {
+              key: 'Referrer-Policy',
+              value: 'strict-origin-when-cross-origin',
+            },
+            {
+              key: 'Content-Security-Policy',
+              value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors *;",
+            },
           ],
         },
       ];
@@ -51,7 +44,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-      }
+      },
     ],
     dangerouslyAllowSVG: false,
   }

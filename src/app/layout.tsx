@@ -47,7 +47,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
         <a href="#main" className="skip-link">Skip to main content</a>
         <ErrorBoundary>
           <FirebaseClientProvider>
-            <main id="main">{children}</main>
+            {children}
             <Toaster />
           </FirebaseClientProvider>
         </ErrorBoundary>
