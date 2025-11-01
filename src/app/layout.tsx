@@ -35,6 +35,15 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
             })();
           `
         }} />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if (location.search.includes('forceReload=1') && 'serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(rs => Promise.all(rs.map(r=>r.unregister())))
+                .then(()=>caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))))
+                .then(()=>location.replace(location.pathname));
+            }
+          `
+        }} />
       </head>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
@@ -52,5 +61,3 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     </html>
   );
 }
-
-    
