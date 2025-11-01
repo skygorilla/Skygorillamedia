@@ -37,7 +37,9 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
   const isActiveRoute = (href: string) => pathname === href;
 
   const handleSignOut = () => {
-    auth.signOut();
+    if (auth) {
+      auth.signOut();
+    }
   };
   
   return (
