@@ -24,45 +24,48 @@ export default function Home() {
     if (!nav || !hero || !header) return;
 
     let triggerY = 0;
-    let morphState = false;
+    let isMorphed = false;
     let ticking = false;
+    const HYSTERESIS = 24;
 
     const computeTriggerY = () => {
-      return hero.offsetTop + hero.offsetHeight - nav.offsetHeight - header.offsetHeight;
+      try {
+        return hero.offsetTop + hero.offsetHeight - nav.offsetHeight - header.offsetHeight;
+      } catch (e) {
+        console.error("Error computing trigger Y:", e);
+        return 0;
+      }
     };
 
     const updateOnScroll = () => {
-      const y = window.pageYOffset || document.documentElement.scrollTop;
-      const newMorphState = y >= triggerY;
+      try {
+        const y = window.pageYOffset || document.documentElement.scrollTop;
 
-      if (morphState !== newMorphState) {
-        morphState = newMorphState;
-        nav.classList.toggle('morph', morphState);
+        if (!isMorphed && y >= triggerY) {
+          nav.classList.add('morph');
+          isMorphed = true;
+        } else if (isMorphed && y <= triggerY - HYSTERESIS) {
+          nav.classList.remove('morph');
+          isMorphed = false;
+        }
+      } catch (error) {
+        console.error('Error in updateOnScroll:', error);
       }
     };
 
     const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          try {
-            updateOnScroll();
-          } catch (error) {
-            console.error('Scroll handler error:', error);
-          } finally {
-            ticking = false;
-          }
+          updateOnScroll();
+          ticking = false;
         });
         ticking = true;
       }
     };
 
     const init = () => {
-      try {
-        triggerY = computeTriggerY();
-        updateOnScroll();
-      } catch (e) {
-        console.error('Initialization error in scroll effect', e);
-      }
+      triggerY = computeTriggerY();
+      updateOnScroll();
     };
 
     init();
