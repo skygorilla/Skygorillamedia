@@ -4,7 +4,9 @@
 import { forwardRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings } from 'lucide-react';
+import { Settings, LogOut, User as UserIcon, LogIn, UserPlus } from 'lucide-react';
+import { useAuth, useUser } from '@/firebase';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
   { href: '/', label: 'Uvod', description: 'Homepage' },
@@ -20,8 +22,14 @@ interface HeaderProps {}
 
 const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
   const pathname = usePathname();
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
   
   const isActiveRoute = (href: string) => pathname === href;
+
+  const handleSignOut = () => {
+    auth.signOut();
+  };
   
   return (
     <>
@@ -47,9 +55,36 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
               ))}
             </ul>
           </nav>
-          <Link href="/site-map" className="settings-gear" aria-label="Site map">
-            <Settings className="h-4 w-4" />
-          </Link>
+          <div className="absolute right-16 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            {!isUserLoading && (
+              user ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-white text-sm hidden md:block">{user.email}</span>
+                  <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Sign out">
+                    <LogOut className="h-4 w-4 text-white" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/login">
+                      <LogIn className="h-4 w-4 mr-1"/>
+                      Prijava
+                    </Link>
+                  </Button>
+                  <Button asChild variant="ghost" size="sm">
+                    <Link href="/signup">
+                      <UserPlus className="h-4 w-4 mr-1"/>
+                      Registracija
+                    </Link>
+                  </Button>
+                </div>
+              )
+            )}
+            <Link href="/site-map" className="settings-gear" aria-label="Site map">
+              <Settings className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </header>
     </>

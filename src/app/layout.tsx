@@ -1,9 +1,7 @@
 import './globals.css';
 import { Inter, Montserrat } from 'next/font/google';
-import { HealthNotification } from '@/components/ui/health-notification';
-import { ErrorNotification } from '@/components/ui/error-notification';
-import { ErrorBadge } from '@/components/ui/error-badge';
-import { ConfigFixer } from '@/components/ui/config-fixer';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { Toaster } from "@/components/ui/toaster"
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import Script from 'next/script';
 
@@ -48,7 +46,10 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to main content</a>
         <ErrorBoundary>
-          <main id="main">{children}</main>
+          <FirebaseClientProvider>
+            <main id="main">{children}</main>
+            <Toaster />
+          </FirebaseClientProvider>
         </ErrorBoundary>
 
         {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
