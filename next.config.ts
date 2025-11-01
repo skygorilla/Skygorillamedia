@@ -41,26 +41,22 @@ const nextConfig: NextConfig = {
       return [];
     }
   },
+  output: 'standalone',
+  
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'placehold.co',
         port: '',
-        pathname: '/**',
+        pathname: '/400x300/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
+        pathname: '/photo-*',
+      }
     ],
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
