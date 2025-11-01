@@ -10,7 +10,6 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": false,
     "noEmit": true,
     "esModuleInterop": true,
