@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { Calculator as CalcIcon, RotateCcw, TrendingUp, Euro, Package } from 'lucide-react';
 
 export default function Calculator() {
   useEffect(() => {
@@ -175,41 +176,55 @@ export default function Calculator() {
     <section className="section go-calc" id="go-calculator" aria-labelledby="calc-title">
       <div className="container go-calc__wrap">
         <div className="go-calc__card">
-          <h2 id="calc-title" className="go-calc__title">Kalkulator Pretplatničkih Modela</h2>
+          <div className="flex items-center gap-2 mb-2">
+            <CalcIcon className="h-6 w-6 text-primary" />
+            <h2 id="calc-title" className="go-calc__title">Kalkulator Pretplatničkih Modela</h2>
+          </div>
           <p className="go-calc__muted">Unesite očekivani broj isporuka godišnje za automatsku preporuku paketa.</p>
 
           <div className="go-calc__plan" role="group" aria-label="Odabir paketa">
-              <button className="go-calc__pill" data-plan="mini" aria-pressed="true" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Mini</button>
-              <button className="go-calc__pill" data-plan="standard" aria-pressed="false" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Standard</button>
-              <button className="go-calc__pill" data-plan="partner" aria-pressed="false" onClick={(e) => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); }}>Partner</button>
+              <button className="go-calc__pill" data-plan="mini" aria-pressed="true" type="button">Mini (1-10)</button>
+              <button className="go-calc__pill" data-plan="standard" aria-pressed="false" type="button">Standard (11-40)</button>
+              <button className="go-calc__pill" data-plan="partner" aria-pressed="false" type="button">Partner (41-80)</button>
           </div>
 
           <div className="go-calc__row mt-4">
             <div className="go-calc__stat go-calc__stat--input">
-                <small>Ad-hoc Cijena (€/isporuka)</small>
-                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" className="go-calc__big-input" />
+                <label htmlFor="go-adhoc" className="text-sm font-semibold mb-2 block">Ad-hoc Cijena (€/isporuka)</label>
+                <input id="go-adhoc" type="number" defaultValue="250" inputMode="numeric" className="go-calc__big-input" min="1" max="1000" />
             </div>
           </div>
           
           <div className="mt-4">
               <label htmlFor="go-events" className='font-semibold text-sm mb-2 block'>Broj isporuka godišnje</label>
-              <div className="go-calc__row items-center">
-                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" aria-describedby="go-events-help" className='w-full' />
-                <div className="go-calc__stat text-center">
-                    <div id="go-events-out" className="text-5xl font-bold text-primary-DEFAULT">12</div>
+              <div className="go-calc__row items-center gap-4">
+                <input id="go-events" type="range" min="1" max="130" step="1" defaultValue="12" aria-describedby="go-events-help" className='flex-1' />
+                <div className="go-calc__stat text-center min-w-[120px]">
+                    <div id="go-events-out" className="text-4xl font-bold text-primary">12</div>
+                    <small className="text-muted-foreground">isporuka</small>
                 </div>
               </div>
           </div>
           
           <div className="go-calc__cta">
-            <button className="btn outline" id="go-reset" type="button" onClick={() => { document.querySelectorAll('.go-calc__pill').forEach(b => b.setAttribute('aria-pressed', 'false')); document.querySelector('[data-plan="mini"]')?.setAttribute('aria-pressed', 'true'); }}>Reset</button>
+            <button className="btn outline flex items-center gap-2" id="go-reset" type="button">
+              <RotateCcw className="h-4 w-4" />
+              Resetiraj
+            </button>
+            <button className="btn primary flex items-center gap-2" type="button" onClick={() => document.getElementById('go-calculator')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>
+              <TrendingUp className="h-4 w-4" />
+              Prikaži rezultate
+            </button>
           </div>
 
           <p className="muted">Pretplata pokriva planiranje, arhivu i koordinaciju; svaka isporuka se fakturira po definiranoj cijeni paketa.</p>
         </div>
 
         <div className="go-calc__card" aria-live="polite">
-          <h2 className="go-calc__title">Rezultati</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <Euro className="h-6 w-6 text-primary" />
+            <h2 className="go-calc__title">Rezultati</h2>
+          </div>
           <div className="go-calc__grid">
             <div className="go-calc__stat">
               <small>Ukupno EUR/god</small>
@@ -235,7 +250,10 @@ export default function Calculator() {
           <div className="go-calc__plan-cards">
             <div className="go-calc__plan-card" data-plan-card="mini">
               <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header">Mini</div>
+              <div className="go-calc__plan-header flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Mini
+              </div>
               <div className="go-calc__plan-price"><span data-total>0</span> €</div>
               <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
               <div className="go-calc__plan-details">
@@ -245,7 +263,10 @@ export default function Calculator() {
             </div>
             <div className="go-calc__plan-card" data-plan-card="standard">
               <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header">Standard</div>
+              <div className="go-calc__plan-header flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Standard
+              </div>
               <div className="go-calc__plan-price"><span data-total>0</span> €</div>
               <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
               <div className="go-calc__plan-details">
@@ -255,7 +276,10 @@ export default function Calculator() {
             </div>
             <div className="go-calc__plan-card" data-plan-card="partner">
               <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header">Partner</div>
+              <div className="go-calc__plan-header flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Partner
+              </div>
               <div className="go-calc__plan-price"><span data-total>0</span> €</div>
               <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
               <div className="go-calc__plan-details">
@@ -265,7 +289,10 @@ export default function Calculator() {
             </div>
              <div className="go-calc__plan-card" data-plan-card="otokplus" style={{display: 'none'}}>
               <div className="go-calc__plan-badge" style={{display: 'none'}}>Preporučeno</div>
-              <div className="go-calc__plan-header">Otok+</div>
+              <div className="go-calc__plan-header flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Otok+
+              </div>
               <div className="go-calc__plan-price"><span data-total>0</span> €</div>
               <div className="go-calc__plan-monthly"><span data-monthly>0</span> €/mj</div>
               <div className="go-calc__plan-details">

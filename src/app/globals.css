@@ -306,6 +306,96 @@
     gap: 24px;
 }
 
+.go-calc__plan-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.go-calc__plan-card {
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--border));
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.go-calc__plan-card:hover {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 4px 16px rgba(221, 3, 18, 0.1);
+    transform: translateY(-2px);
+}
+
+.go-calc__plan-card--best {
+    border-color: hsl(var(--accent));
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px hsla(var(--accent), 0.15);
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsla(var(--accent), 0.02) 100%);
+}
+
+.go-calc__plan-badge {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: hsl(var(--accent));
+    color: white;
+    padding: 4px 12px;
+    border-radius: 0 0 8px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.go-calc__plan-header {
+    font-family: 'Montserrat', system-ui;
+    font-size: 18px;
+    font-weight: 600;
+    color: hsl(var(--card-foreground));
+    margin-bottom: 8px;
+    justify-content: center;
+}
+
+.go-calc__plan-header svg {
+    color: hsl(var(--primary));
+    transition: color 0.2s ease;
+}
+
+.go-calc__plan-card--best .go-calc__plan-header svg {
+    color: hsl(var(--accent));
+}
+
+.go-calc__plan-price {
+    font: 700 24px 'Montserrat', system-ui;
+    color: hsl(var(--primary));
+    margin-bottom: 4px;
+}
+
+.go-calc__plan-card--best .go-calc__plan-price {
+    color: hsl(var(--accent));
+}
+
+.go-calc__plan-monthly {
+    font-size: 12px;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 12px;
+}
+
+.go-calc__plan-details {
+    font-size: 11px;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.4;
+}
+
+.go-calc__plan-details div {
+    margin-bottom: 2px;
+}
+
 .go-calc__card {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
@@ -327,5 +417,13 @@
     }
     .go-calc__wrap {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .go-calc__plan-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .go-calc__plan-card--best {
+        transform: none;
     }
 }

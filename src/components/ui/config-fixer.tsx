@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Settings, TestTube, Wrench, AlertCircle } from 'lucide-react';
 import { runConfigValidation } from '@/utils/configValidator';
 import { testConfigDetection } from '@/utils/testConfigDetection';
 
@@ -36,29 +37,39 @@ export function ConfigFixer() {
   return (
     <div className="config-fixer">
       <div className="config-fixer__header">
-        <h3>Configuration Issues</h3>
+        <div className="flex items-center gap-2">
+          <Settings className="h-4 w-4" />
+          <h3>Configuration Issues</h3>
+        </div>
         <button 
           onClick={() => {
             testConfigDetection();
             setIssues(runConfigValidation());
           }}
-          className="config-fixer__test"
+          className="config-fixer__test flex items-center gap-1"
         >
+          <TestTube className="h-3 w-3" />
           Test
         </button>
       </div>
       {issues.map(issue => (
         <div key={issue.id} className="config-issue">
-          <div className="config-issue__text">
-            <div>{issue.message}</div>
-            <div className="config-issue__rec">💡 {issue.recommendation}</div>
+          <div className="flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+            <div className="config-issue__text">
+              <div>{issue.message}</div>
+              <div className="config-issue__rec flex items-center gap-1">
+                <span className="text-xs">💡</span> {issue.recommendation}
+              </div>
+            </div>
           </div>
           {issue.autoFix && (
             <button 
               onClick={() => handleFix(issue.id)}
               disabled={fixing === issue.id}
-              className="config-issue__fix"
+              className="config-issue__fix flex items-center gap-1"
             >
+              <Wrench className="h-3 w-3" />
               {fixing === issue.id ? 'Fixing...' : 'Fix'}
             </button>
           )}
