@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     
     // Skip rate limiting in development
     if (process.env.NODE_ENV !== 'development') {
-      const clientIp = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+      const clientIp = request.headers.get('x-forwarded-for') || 'unknown';
       try {
         if (!rateLimit(clientIp, 100, 60000)) {
           return new NextResponse('Too Many Requests', { status: 429 });

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       subject: subject?.replace(/[<>\"'&]/g, ''),
       message: message.substring(0, 200),
       timestamp: new Date().toISOString(),
-      ip: request.ip || 'unknown'
+      ip: request.headers.get('x-forwarded-for') || 'unknown'
     }));
     
     return NextResponse.json({ 

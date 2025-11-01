@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       data: data ? JSON.stringify(data).substring(0, 500) : undefined,
       timestamp: new Date().toISOString(),
       userAgent: request.headers.get('user-agent')?.substring(0, 200),
-      ip: request.ip || 'unknown'
+      ip: request.headers.get('x-forwarded-for') || 'unknown'
     }));
     
     return NextResponse.json({ success: true });

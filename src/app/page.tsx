@@ -13,7 +13,9 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   
   const headerElementRef = (node: HTMLElement | null) => {
-    headerRef.current = node;
+    if (headerRef.current !== node) {
+      (headerRef as any).current = node;
+    }
   };
 
   useEffect(() => {
